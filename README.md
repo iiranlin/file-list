@@ -12,11 +12,13 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 - **📱 Responsive Design**: Mobile-first design that works on all devices
 - **⚡ Modern Stack**: Built with Next.js 15, TypeScript, and TailwindCSS
 - **🔐 Admin System**: Complete content management system with authentication
+- **🗄️ Database Support**: PostgreSQL database with Drizzle ORM and JSON fallback
 
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
+- **Database**: PostgreSQL with Drizzle ORM
 - **Styling**: TailwindCSS
 - **UI Components**: shadcn/ui
 - **Icons**: Lucide React
@@ -35,12 +37,27 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
    npm install
    ```
 
-3. **Run the development server**
+3. **Set up environment variables**
+   ```bash
+   cp .env.local.example .env.local
+   # Edit .env.local with your database credentials
+   ```
+
+4. **Set up the database**
+   ```bash
+   # Generate database schema
+   npm run db:generate
+
+   # Push schema to database
+   npm run db:push
+   ```
+
+5. **Run the development server**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**
+6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000) to see the website.
 
 ## 🔐 管理系统
@@ -69,6 +86,45 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 - **实时更新**: 修改内容后立即在前台显示
 - **表单验证**: 完整的数据验证和错误处理
 - **批量操作**: 支持批量管理内容项目
+
+## 🗄️ 数据库配置
+
+### PostgreSQL 数据库
+
+项目支持PostgreSQL数据库，使用Drizzle ORM进行数据管理：
+
+1. **数据库连接**: 在 `.env.local` 中配置 `DATABASE_URL`
+2. **表结构**: 自动生成4个表（audio_files, video_files, image_files, tutorials）
+3. **数据迁移**: 支持从JSON文件迁移到数据库
+4. **回退机制**: 如果数据库连接失败，自动回退到JSON文件
+
+### 数据库命令
+
+```bash
+# 生成迁移文件
+npm run db:generate
+
+# 推送schema到数据库
+npm run db:push
+
+# 打开数据库管理界面
+npm run db:studio
+
+# 从JSON迁移数据到数据库
+npm run db:migrate
+```
+
+### 数据迁移
+
+1. **通过管理界面**: 访问 `/admin/migrate` 页面进行可视化迁移
+2. **通过命令行**: 运行 `npm run db:migrate` 脚本
+3. **通过API**: 调用 `/api/admin/migrate` 端点
+
+### 数据存储策略
+
+- **优先级**: 数据库 > JSON文件
+- **回退机制**: 数据库失败时自动使用JSON文件
+- **双重保障**: JSON文件作为备份保留
 
 ## 📁 Project Structure
 

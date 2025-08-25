@@ -27,6 +27,20 @@ export default function AdminDashboard() {
     // 获取内容统计数据
     const fetchStats = async () => {
       try {
+        // 优先使用状态API获取统计信息
+        const statusRes = await fetch('/api/admin/status')
+        if (statusRes.ok) {
+          const statusData = await statusRes.json()
+          setStats({
+            audio: statusData.data.audio,
+            video: statusData.data.video,
+            images: statusData.data.images,
+            tutorials: statusData.data.tutorials
+          })
+          return
+        }
+
+        // 如果状态API失败，回退到单独的API调用
         const [audioRes, videoRes, imagesRes, tutorialsRes] = await Promise.all([
           fetch('/api/admin/audio'),
           fetch('/api/admin/video'),

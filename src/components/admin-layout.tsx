@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { 
-  Shield, 
-  Music, 
-  Video, 
-  Image as ImageIcon, 
-  BookOpen, 
+import {
+  Shield,
+  Music,
+  Video,
+  Image as ImageIcon,
+  BookOpen,
+  Database,
   LogOut,
   Menu,
   X
@@ -39,6 +40,11 @@ const navigation = [
     name: "教程管理",
     href: "/admin/tutorials",
     icon: BookOpen,
+  },
+  {
+    name: "数据库迁移",
+    href: "/admin/migrate",
+    icon: Database,
   },
 ]
 
