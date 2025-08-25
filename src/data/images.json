@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "Mountain Landscape",
+    "description": "Breathtaking view of snow-capped mountains during golden hour",
+    "src": "/images/sample1.jpg",
+    "category": "Nature",
+    "tags": ["landscape", "mountains", "sunset"],
+    "uploadDate": "2024-01-20",
+    "dimensions": "1920x1080"
+  },
+  {
+    "id": 2,
+    "title": "Urban Architecture",
+    "description": "Modern city skyline with geometric building designs",
+    "src": "/images/sample2.jpg",
+    "category": "Architecture",
+    "tags": ["city", "buildings", "modern"],
+    "uploadDate": "2024-01-18",
+    "dimensions": "1600x900"
+  },
+  {
+    "id": 3,
+    "title": "Portrait Photography",
+    "description": "Professional portrait with dramatic lighting",
+    "src": "/images/sample3.jpg",
+    "category": "Portrait",
+    "tags": ["portrait", "lighting", "professional"],
+    "uploadDate": "2024-01-15",
+    "dimensions": "1080x1350"
+  },
+  {
+    "id": 4,
+    "title": "Abstract Art",
+    "description": "Colorful abstract composition with flowing shapes",
+    "src": "/images/sample4.jpg",
+    "category": "Abstract",
+    "tags": ["abstract", "colorful", "art"],
+    "uploadDate": "2024-01-12",
+    "dimensions": "1200x1200"
+  },
+  {
+    "id": 5,
+    "title": "Wildlife Photography",
+    "description": "Majestic eagle in flight captured in natural habitat",
+    "src": "/images/sample5.jpg",
+    "category": "Wildlife",
+    "tags": ["wildlife", "eagle", "nature"],
+    "uploadDate": "2024-01-10",
+    "dimensions": "1920x1280"
+  },
+  {
+    "id": 6,
+    "title": "Street Photography",
+    "description": "Candid moment captured on busy city street",
+    "src": "/images/sample6.jpg",
+    "category": "Street",
+    "tags": ["street", "candid", "urban"],
+    "uploadDate": "2024-01-08",
+    "dimensions": "1600x1067"
+  },
+  {
+    "id": 7,
+    "title": "Macro Photography",
+    "description": "Detailed close-up of morning dew on flower petals",
+    "src": "/images/sample7.jpg",
+    "category": "Macro",
+    "tags": ["macro", "flower", "dew"],
+    "uploadDate": "2024-01-05",
+    "dimensions": "1080x1080"
+  },
+  {
+    "id": 8,
+    "title": "Seascape",
+    "description": "Peaceful ocean waves meeting rocky coastline",
+    "src": "/images/sample8.jpg",
+    "category": "Nature",
+    "tags": ["ocean", "waves", "coastline"],
+    "uploadDate": "2024-01-03",
+    "dimensions": "1920x1080"
+  },
+  {
+    "id": 9,
+    "title": "Night Photography",
+    "description": "Star trails over desert landscape",
+    "src": "/images/sample9.jpg",
+    "category": "Night",
+    "tags": ["stars", "night", "desert"],
+    "uploadDate": "2024-01-01",
+    "dimensions": "1920x1280"
+  }
+]

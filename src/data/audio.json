@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Ambient Forest Sounds",
+    "artist": "Nature Collection",
+    "duration": "5:23",
+    "genre": "Ambient",
+    "src": "/audio/sample1.mp3",
+    "description": "Relaxing forest ambience with birds chirping and gentle wind through trees."
+  },
+  {
+    "id": 2,
+    "title": "Jazz Piano Improvisation",
+    "artist": "Studio Sessions",
+    "duration": "3:45",
+    "genre": "Jazz",
+    "src": "/audio/sample2.mp3",
+    "description": "Smooth jazz piano improvisation recorded in a cozy studio setting."
+  },
+  {
+    "id": 3,
+    "title": "Electronic Beats",
+    "artist": "Digital Sounds",
+    "duration": "4:12",
+    "genre": "Electronic",
+    "src": "/audio/sample3.mp3",
+    "description": "Upbeat electronic music with synthesized melodies and driving rhythms."
+  },
+  {
+    "id": 4,
+    "title": "Acoustic Guitar Melody",
+    "artist": "String Sessions",
+    "duration": "2:58",
+    "genre": "Acoustic",
+    "src": "/audio/sample4.mp3",
+    "description": "Gentle acoustic guitar melody perfect for relaxation and focus."
+  },
+  {
+    "id": 5,
+    "title": "Ocean Waves",
+    "artist": "Nature Collection",
+    "duration": "8:15",
+    "genre": "Ambient",
+    "src": "/audio/sample5.mp3",
+    "description": "Soothing ocean waves recorded at sunset on a peaceful beach."
+  },
+  {
+    "id": 6,
+    "title": "Classical String Quartet",
+    "artist": "Chamber Music",
+    "duration": "6:30",
+    "genre": "Classical",
+    "src": "/audio/sample6.mp3",
+    "description": "Beautiful string quartet performance of a classical composition."
+  }
+]

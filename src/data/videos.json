@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "title": "Modern Web Development Tutorial",
+    "description": "Learn the fundamentals of modern web development with React and Next.js",
+    "duration": "12:45",
+    "category": "Tutorial",
+    "thumbnail": "/images/video-thumb-1.jpg",
+    "src": "/videos/sample1.mp4",
+    "views": "1.2k",
+    "uploadDate": "2024-01-15"
+  },
+  {
+    "id": 2,
+    "title": "Nature Documentary: Forest Life",
+    "description": "Explore the hidden world of forest ecosystems and wildlife",
+    "duration": "8:30",
+    "category": "Documentary",
+    "thumbnail": "/images/video-thumb-2.jpg",
+    "src": "/videos/sample2.mp4",
+    "views": "856",
+    "uploadDate": "2024-01-10"
+  },
+  {
+    "id": 3,
+    "title": "Creative Design Process",
+    "description": "Behind the scenes look at the creative design process for digital products",
+    "duration": "15:20",
+    "category": "Design",
+    "thumbnail": "/images/video-thumb-3.jpg",
+    "src": "/videos/sample3.mp4",
+    "views": "2.1k",
+    "uploadDate": "2024-01-08"
+  },
+  {
+    "id": 4,
+    "title": "Cooking Masterclass: Italian Cuisine",
+    "description": "Learn to cook authentic Italian dishes with professional techniques",
+    "duration": "22:15",
+    "category": "Cooking",
+    "thumbnail": "/images/video-thumb-4.jpg",
+    "src": "/videos/sample4.mp4",
+    "views": "3.4k",
+    "uploadDate": "2024-01-05"
+  },
+  {
+    "id": 5,
+    "title": "Photography Tips for Beginners",
+    "description": "Essential photography tips and techniques for capturing stunning images",
+    "duration": "9:45",
+    "category": "Photography",
+    "thumbnail": "/images/video-thumb-5.jpg",
+    "src": "/videos/sample5.mp4",
+    "views": "1.8k",
+    "uploadDate": "2024-01-03"
+  },
+  {
+    "id": 6,
+    "title": "Fitness Workout Routine",
+    "description": "Complete home workout routine for building strength and endurance",
+    "duration": "18:30",
+    "category": "Fitness",
+    "thumbnail": "/images/video-thumb-6.jpg",
+    "src": "/videos/sample6.mp4",
+    "views": "2.7k",
+    "uploadDate": "2024-01-01"
+  }
+]

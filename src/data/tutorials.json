@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Getting Started with Next.js 15",
+    "excerpt": "Learn the fundamentals of Next.js 15, including the new App Router, Server Components, and modern React patterns. This comprehensive guide covers everything you need to know to build modern web applications.",
+    "content": "# Getting Started with Next.js 15\n\nNext.js 15 introduces several exciting features that make building React applications even more powerful and efficient. In this tutorial, we'll explore the key concepts and get you up and running with your first Next.js application.\n\n## What's New in Next.js 15\n\n- **Improved App Router**: Enhanced routing capabilities with better performance\n- **Server Components**: Better server-side rendering and data fetching\n- **Turbopack**: Faster build times and development experience\n- **Enhanced TypeScript Support**: Better type safety and developer experience\n\n## Setting Up Your Project\n\nFirst, create a new Next.js project:\n\n```bash\nnpx create-next-app@latest my-app\ncd my-app\nnpm run dev\n```\n\n## Key Concepts\n\n### App Router\nThe App Router is built on React's Server Components and provides a more intuitive way to structure your application.\n\n### Server Components\nServer Components allow you to render components on the server, reducing the JavaScript bundle size and improving performance.\n\n## Conclusion\n\nNext.js 15 provides a solid foundation for building modern web applications with React. The new features make development more efficient and applications more performant.",
+    "category": "Web Development",
+    "difficulty": "Beginner",
+    "readTime": "8 min read",
+    "author": "John Doe",
+    "publishDate": "2024-01-20",
+    "tags": ["Next.js", "React", "JavaScript", "Web Development"]
+  },
+  {
+    "id": 2,
+    "title": "Advanced TypeScript Patterns",
+    "excerpt": "Dive deep into advanced TypeScript patterns and techniques. Learn about utility types, conditional types, mapped types, and how to create type-safe APIs that scale with your application.",
+    "content": "# Advanced TypeScript Patterns\n\nTypeScript offers powerful type system features that can help you write more robust and maintainable code. In this tutorial, we'll explore advanced patterns that every TypeScript developer should know.\n\n## Utility Types\n\nTypeScript provides several built-in utility types that can help you transform types:\n\n```typescript\n// Partial<T> - Makes all properties optional\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\ntype PartialUser = Partial<User>;\n// { id?: number; name?: string; email?: string; }\n```\n\n## Conditional Types\n\nConditional types allow you to create types that depend on a condition:\n\n```typescript\ntype ApiResponse<T> = T extends string \n  ? { message: T } \n  : { data: T };\n```\n\n## Mapped Types\n\nMapped types allow you to create new types by transforming properties of existing types:\n\n```typescript\ntype Readonly<T> = {\n  readonly [P in keyof T]: T[P];\n};\n```\n\n## Best Practices\n\n1. Use strict mode for better type safety\n2. Leverage utility types instead of creating custom ones\n3. Use conditional types for flexible APIs\n4. Document complex types with comments\n\nThese patterns will help you write more type-safe and maintainable TypeScript code.",
+    "category": "Programming",
+    "difficulty": "Advanced",
+    "readTime": "12 min read",
+    "author": "Jane Smith",
+    "publishDate": "2024-01-18",
+    "tags": ["TypeScript", "Programming", "Types", "Advanced"]
+  },
+  {
+    "id": 3,
+    "title": "CSS Grid Layout Mastery",
+    "excerpt": "Master CSS Grid Layout with practical examples and real-world use cases. Learn how to create complex, responsive layouts with ease using the power of CSS Grid.",
+    "content": "# CSS Grid Layout Mastery\n\nCSS Grid is a powerful layout system that allows you to create complex, two-dimensional layouts with ease. In this tutorial, we'll explore the fundamentals and advanced techniques.\n\n## Grid Basics\n\nCSS Grid introduces a new way to think about layout:\n\n```css\n.container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  grid-template-rows: auto;\n  gap: 1rem;\n}\n```\n\n## Grid Areas\n\nYou can define named grid areas for more semantic layouts:\n\n```css\n.layout {\n  display: grid;\n  grid-template-areas:\n    \"header header header\"\n    \"sidebar main main\"\n    \"footer footer footer\";\n}\n\n.header { grid-area: header; }\n.sidebar { grid-area: sidebar; }\n.main { grid-area: main; }\n.footer { grid-area: footer; }\n```\n\n## Responsive Grids\n\nCreate responsive layouts without media queries:\n\n```css\n.responsive-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n  gap: 1rem;\n}\n```\n\n## Advanced Techniques\n\n- Subgrid for nested layouts\n- Grid alignment properties\n- Implicit vs explicit grids\n- Grid line naming\n\nCSS Grid provides incredible flexibility for modern web layouts.",
+    "category": "CSS",
+    "difficulty": "Intermediate",
+    "readTime": "10 min read",
+    "author": "Mike Johnson",
+    "publishDate": "2024-01-15",
+    "tags": ["CSS", "Grid", "Layout", "Responsive"]
+  },
+  {
+    "id": 4,
+    "title": "React Performance Optimization",
+    "excerpt": "Learn essential techniques for optimizing React application performance. Discover how to use React.memo, useMemo, useCallback, and other optimization strategies effectively.",
+    "content": "# React Performance Optimization\n\nPerformance is crucial for user experience. In this tutorial, we'll explore various techniques to optimize your React applications.\n\n## React.memo\n\nPrevent unnecessary re-renders with React.memo:\n\n```jsx\nconst ExpensiveComponent = React.memo(({ data }) => {\n  return <div>{/* Complex rendering logic */}</div>;\n});\n```\n\n## useMemo Hook\n\nMemoize expensive calculations:\n\n```jsx\nconst ExpensiveCalculation = ({ items }) => {\n  const expensiveValue = useMemo(() => {\n    return items.reduce((acc, item) => acc + item.value, 0);\n  }, [items]);\n\n  return <div>{expensiveValue}</div>;\n};\n```\n\n## useCallback Hook\n\nMemoize function references:\n\n```jsx\nconst Parent = ({ items }) => {\n  const handleClick = useCallback((id) => {\n    // Handle click logic\n  }, []);\n\n  return (\n    <div>\n      {items.map(item => (\n        <Child key={item.id} onClick={handleClick} />\n      ))}\n    </div>\n  );\n};\n```\n\n## Code Splitting\n\nSplit your code for better loading performance:\n\n```jsx\nconst LazyComponent = lazy(() => import('./LazyComponent'));\n\nfunction App() {\n  return (\n    <Suspense fallback={<div>Loading...</div>}>\n      <LazyComponent />\n    </Suspense>\n  );\n}\n```\n\n## Best Practices\n\n1. Profile before optimizing\n2. Use React DevTools Profiler\n3. Avoid premature optimization\n4. Measure the impact of changes\n\nThese techniques will help you build faster, more responsive React applications.",
+    "category": "React",
+    "difficulty": "Intermediate",
+    "readTime": "15 min read",
+    "author": "Sarah Wilson",
+    "publishDate": "2024-01-12",
+    "tags": ["React", "Performance", "Optimization", "JavaScript"]
+  }
+]
