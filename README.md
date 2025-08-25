@@ -13,12 +13,14 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 - **⚡ Modern Stack**: Built with Next.js 15, TypeScript, and TailwindCSS
 - **🔐 Admin System**: Complete content management system with authentication
 - **🗄️ Database Support**: PostgreSQL database with Drizzle ORM and JSON fallback
+- **☁️ File Upload**: Qiniu Cloud Storage integration for media files
 
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Database**: PostgreSQL with Drizzle ORM
+- **File Storage**: Qiniu Cloud Storage
 - **Styling**: TailwindCSS
 - **UI Components**: shadcn/ui
 - **Icons**: Lucide React
@@ -162,6 +164,80 @@ npm run db:migrate
 - **优先级**: 数据库 > JSON文件
 - **回退机制**: 数据库失败时自动使用JSON文件
 - **双重保障**: JSON文件作为备份保留
+
+## ☁️ 七牛云存储配置
+
+### 文件上传功能
+
+项目集成了七牛云存储，支持图片、视频、音频文件的云端上传：
+
+1. **支持的文件类型**:
+   - 图片: JPEG, PNG, GIF, WebP (最大20MB)
+   - 视频: MP4, WebM, OGG, AVI (最大200MB)
+   - 音频: MP3, WAV, OGG, AAC (最大50MB)
+
+2. **上传方式**:
+   - URL链接输入（传统方式）
+   - 文件直接上传（新功能）
+
+### 配置步骤
+
+1. **获取七牛云账户**:
+   - 注册 [七牛云](https://www.qiniu.com/) 账户
+   - 创建存储空间（Bucket）
+   - 获取访问密钥（AccessKey/SecretKey）
+
+2. **配置环境变量**:
+   ```env
+   QINIU_ACCESS_KEY=your_access_key
+   QINIU_SECRET_KEY=your_secret_key
+   QINIU_BUCKET_NAME=your_bucket_name
+   QINIU_DOMAIN=your_bucket_domain
+   QINIU_CDN_DOMAIN=https://your-cdn-domain.com
+   ```
+
+3. **测试配置**:
+   ```bash
+   npm run qiniu:test
+   ```
+
+### 文件存储结构
+
+上传的文件将按以下结构存储在七牛云：
+
+```
+fileList/
+├── images/    # 图片文件
+├── videos/    # 视频文件
+└── audios/    # 音频文件
+```
+
+### 文件命名规则
+
+文件名格式：`年月日时分_原文件名.扩展名`
+
+示例：
+- `202508251430_sample-image.jpg`
+- `202508251430_demo-video.mp4`
+- `202508251430_music-track.mp3`
+
+### 使用方法
+
+在管理后台的各个内容管理页面中：
+1. 选择"上传文件"选项卡
+2. 点击选择文件或拖拽文件到上传区域
+3. 系统自动上传到七牛云并返回CDN链接
+4. 文件URL自动填入表单字段
+
+### 测试上传功能
+
+```bash
+# 测试七牛云配置和路径生成
+npm run qiniu:test
+
+# 测试API路径生成
+curl "http://localhost:3000/api/upload/test?fileName=test.jpg&type=image"
+```
 
 ## 📁 Project Structure
 

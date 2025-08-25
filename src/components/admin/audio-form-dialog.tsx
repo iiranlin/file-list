@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { FileUpload } from "@/components/file-upload"
 import type { AudioFile } from "@/lib/data-loader"
 
 interface AudioFormDialogProps {
@@ -150,14 +152,41 @@ export function AudioFormDialog({ open, onOpenChange, editingItem, onSave }: Aud
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="src">文件路径 *</Label>
-            <Input
-              id="src"
-              value={formData.src}
-              onChange={(e) => handleChange('src', e.target.value)}
-              placeholder="如: /audio/sample.mp3"
-              required
-            />
+            <Label>音频文件 *</Label>
+            <Tabs defaultValue="url" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="url">URL链接</TabsTrigger>
+                <TabsTrigger value="upload">上传文件</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="url" className="space-y-2">
+                <Input
+                  id="src"
+                  value={formData.src}
+                  onChange={(e) => handleChange('src', e.target.value)}
+                  placeholder="请输入音频文件URL"
+                  required
+                />
+              </TabsContent>
+
+              <TabsContent value="upload" className="space-y-2">
+                <FileUpload
+                  fileType="audio"
+                  onUploadSuccess={(url, fileName) => {
+                    handleChange('src', url)
+                    if (!formData.title) {
+                      handleChange('title', fileName.replace(/\.[^/.]+$/, ''))
+                    }
+                  }}
+                  onUploadError={(error) => {
+                    console.error('Upload error:', error)
+                    alert(`上传失败: ${error}`)
+                  }}
+                  accept="audio/*"
+                  maxSize={50}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
 
           <div className="space-y-2">

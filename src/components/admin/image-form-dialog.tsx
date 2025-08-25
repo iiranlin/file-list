@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { FileUpload } from "@/components/file-upload"
 import type { ImageFile } from "@/lib/data-loader"
 
 interface ImageFormDialogProps {
@@ -131,14 +133,41 @@ export function ImageFormDialog({ open, onOpenChange, editingItem, onSave }: Ima
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="src">图片文件路径 *</Label>
-            <Input
-              id="src"
-              value={formData.src}
-              onChange={(e) => handleChange('src', e.target.value)}
-              placeholder="如: /images/sample.jpg"
-              required
-            />
+            <Label>图片文件 *</Label>
+            <Tabs defaultValue="url" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="url">URL链接</TabsTrigger>
+                <TabsTrigger value="upload">上传图片</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="url" className="space-y-2">
+                <Input
+                  id="src"
+                  value={formData.src}
+                  onChange={(e) => handleChange('src', e.target.value)}
+                  placeholder="请输入图片文件URL"
+                  required
+                />
+              </TabsContent>
+
+              <TabsContent value="upload" className="space-y-2">
+                <FileUpload
+                  fileType="image"
+                  onUploadSuccess={(url, fileName) => {
+                    handleChange('src', url)
+                    if (!formData.title) {
+                      handleChange('title', fileName.replace(/\.[^/.]+$/, ''))
+                    }
+                  }}
+                  onUploadError={(error) => {
+                    console.error('Upload error:', error)
+                    alert(`上传失败: ${error}`)
+                  }}
+                  accept="image/*"
+                  maxSize={20}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
