@@ -11,6 +11,7 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 - **🌙 Dark Mode**: Toggle between light, dark, and system themes
 - **📱 Responsive Design**: Mobile-first design that works on all devices
 - **⚡ Modern Stack**: Built with Next.js 15, TypeScript, and TailwindCSS
+- **🔐 Admin System**: Complete content management system with authentication
 
 ## 🛠️ Tech Stack
 
@@ -42,11 +43,47 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000) to see the website.
 
+## 🔐 管理系统
+
+网站包含一个完整的内容管理系统，可以通过以下方式访问：
+
+### 访问管理后台
+
+1. **登录页面**: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
+2. **管理员账号**:
+   - 用户名: `admin`
+   - 密码: `admin123`
+
+### 管理功能
+
+- **🎵 音频管理**: 添加、编辑、删除音频文件
+- **🎥 视频管理**: 管理视频内容和元数据
+- **🖼️ 图片管理**: 管理图片集合和标签
+- **📚 教程管理**: 创建和编辑教程内容
+- **📊 数据统计**: 查看各类内容的统计信息
+
+### 管理系统特性
+
+- **安全认证**: 基于用户名密码的登录系统
+- **响应式设计**: 支持桌面和移动设备管理
+- **实时更新**: 修改内容后立即在前台显示
+- **表单验证**: 完整的数据验证和错误处理
+- **批量操作**: 支持批量管理内容项目
+
 ## 📁 Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router pages
+│   ├── admin/             # Admin management system
+│   │   ├── login/         # Admin login page
+│   │   ├── audio/         # Audio management
+│   │   ├── video/         # Video management
+│   │   ├── images/        # Image management
+│   │   ├── tutorials/     # Tutorial management
+│   │   └── page.tsx       # Admin dashboard
+│   ├── api/               # API routes for admin operations
+│   │   └── admin/         # Admin API endpoints
 │   ├── audio/             # Audio collection page
 │   ├── video/             # Video gallery page
 │   ├── images/            # Image gallery page
@@ -55,6 +92,12 @@ src/
 │   └── page.tsx           # Home page
 ├── components/            # React components
 │   ├── ui/               # shadcn/ui components
+│   ├── admin/            # Admin management components
+│   │   ├── audio-form-dialog.tsx    # Audio form dialog
+│   │   ├── video-form-dialog.tsx    # Video form dialog
+│   │   ├── image-form-dialog.tsx    # Image form dialog
+│   │   └── tutorial-form-dialog.tsx # Tutorial form dialog
+│   ├── admin-layout.tsx  # Admin layout component
 │   ├── audio-player.tsx  # Audio player component
 │   ├── video-player.tsx  # Video player with modal
 │   ├── image-gallery.tsx # Image gallery with lightbox
@@ -69,7 +112,9 @@ src/
 │   └── tutorials.json    # Tutorial content data
 ├── lib/                  # Utilities and data loaders
 │   ├── utils.ts          # Utility functions
-│   └── data-loader.ts    # JSON data loading functions
+│   ├── data-loader.ts    # JSON data loading functions
+│   ├── data-manager.ts   # Data management functions
+│   └── auth.ts           # Authentication utilities
 
 ```
 

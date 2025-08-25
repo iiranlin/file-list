@@ -1,0 +1,221 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import type { VideoFile } from "@/lib/data-loader"
+
+interface VideoFormDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  editingItem: VideoFile | null
+  onSave: () => void
+}
+
+export function VideoFormDialog({ open, onOpenChange, editingItem, onSave }: VideoFormDialogProps) {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    duration: "",
+    category: "",
+    thumbnail: "",
+    src: "",
+    views: "",
+    uploadDate: "",
+  })
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (editingItem) {
+      setFormData({
+        title: editingItem.title,
+        description: editingItem.description,
+        duration: editingItem.duration,
+        category: editingItem.category,
+        thumbnail: editingItem.thumbnail,
+        src: editingItem.src,
+        views: editingItem.views,
+        uploadDate: editingItem.uploadDate,
+      })
+    } else {
+      setFormData({
+        title: "",
+        description: "",
+        duration: "",
+        category: "",
+        thumbnail: "",
+        src: "",
+        views: "",
+        uploadDate: new Date().toISOString().split('T')[0],
+      })
+    }
+  }, [editingItem, open])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const url = '/api/admin/video'
+      const method = editingItem ? 'PUT' : 'POST'
+      const body = editingItem 
+        ? { ...formData, id: editingItem.id }
+        : formData
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+
+      if (response.ok) {
+        onSave()
+      } else {
+        alert('保存失败')
+      }
+    } catch (error) {
+      console.error('Failed to save video:', error)
+      alert('保存失败')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {editingItem ? '编辑视频' : '添加视频'}
+          </DialogTitle>
+          <DialogDescription>
+            {editingItem ? '修改视频信息' : '添加新的视频文件到您的收藏'}
+          </DialogDescription>
+        </DialogHeader>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">标题 *</Label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              placeholder="请输入视频标题"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">描述 *</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              placeholder="请输入视频描述"
+              rows={3}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="duration">时长 *</Label>
+              <Input
+                id="duration"
+                value={formData.duration}
+                onChange={(e) => handleChange('duration', e.target.value)}
+                placeholder="如: 12:45"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category">分类 *</Label>
+              <Input
+                id="category"
+                value={formData.category}
+                onChange={(e) => handleChange('category', e.target.value)}
+                placeholder="如: Tutorial"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="thumbnail">缩略图路径 *</Label>
+            <Input
+              id="thumbnail"
+              value={formData.thumbnail}
+              onChange={(e) => handleChange('thumbnail', e.target.value)}
+              placeholder="如: /images/video-thumb.jpg"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="src">视频文件路径 *</Label>
+            <Input
+              id="src"
+              value={formData.src}
+              onChange={(e) => handleChange('src', e.target.value)}
+              placeholder="如: /videos/sample.mp4"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="views">观看量 *</Label>
+              <Input
+                id="views"
+                value={formData.views}
+                onChange={(e) => handleChange('views', e.target.value)}
+                placeholder="如: 1.2k"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="uploadDate">上传日期 *</Label>
+              <Input
+                id="uploadDate"
+                type="date"
+                value={formData.uploadDate}
+                onChange={(e) => handleChange('uploadDate', e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+            >
+              取消
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? '保存中...' : '保存'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
