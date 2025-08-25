@@ -43,13 +43,19 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
    # Edit .env.local with your database credentials
    ```
 
-4. **Set up the database**
+4. **Configure the database**
    ```bash
-   # Generate database schema
-   npm run db:generate
+   # Run the database setup wizard
+   npm run db:setup
+
+   # Test database connection
+   npm run db:test
 
    # Push schema to database
    npm run db:push
+
+   # Import initial data from JSON files
+   npm run db:migrate
    ```
 
 5. **Run the development server**
@@ -98,9 +104,40 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 3. **数据迁移**: 支持从JSON文件迁移到数据库
 4. **回退机制**: 如果数据库连接失败，自动回退到JSON文件
 
+### 快速开始
+
+1. **运行配置向导**:
+   ```bash
+   npm run db:setup
+   ```
+
+2. **配置数据库连接**:
+   编辑 `.env.local` 文件，设置您的数据库连接信息：
+   ```env
+   DATABASE_URL="postgresql://username:password@host:port/database?sslmode=require"
+   ```
+
+3. **测试连接**:
+   ```bash
+   npm run db:test
+   ```
+
+### 推荐的云数据库服务
+
+- **[Neon](https://neon.tech)** - 免费的无服务器PostgreSQL
+- **[Supabase](https://supabase.com)** - 开源的Firebase替代品
+- **[Railway](https://railway.app)** - 简单的云部署平台
+- **[Vercel Postgres](https://vercel.com/storage/postgres)** - Vercel的托管PostgreSQL
+
 ### 数据库命令
 
 ```bash
+# 验证完整项目设置
+npm run db:verify
+
+# 测试数据库连接
+npm run db:test
+
 # 生成迁移文件
 npm run db:generate
 
