@@ -14,6 +14,7 @@ A clean and modern personal showcase website built with Next.js 15 and shadcn/ui
 - **🔐 Admin System**: Complete content management system with authentication
 - **🗄️ Database Support**: PostgreSQL database with Drizzle ORM and JSON fallback
 - **☁️ File Upload**: Qiniu Cloud Storage integration for media files
+- **🔐 Authentication**: TOTP (Time-based One-Time Password) verification system
 
 ## 🛠️ Tech Stack
 
@@ -239,20 +240,72 @@ npm run qiniu:test
 curl "http://localhost:3000/api/upload/test?fileName=test.jpg&type=image"
 ```
 
+## 🔐 TOTP身份验证系统
+
+### TOTP验证机制
+
+项目集成了基于时间的一次性密码（TOTP）身份验证系统：
+
+1. **验证方式**: 用户名 + 6位时间同步验证码
+2. **注册流程**: 输入用户名 → 生成二维码 → 扫描设置 → 确认激活
+3. **登录流程**: 用户名 + 验证器应用中的当前6位数字
+4. **数据存储**: PostgreSQL数据库存储TOTP密钥
+5. **时间窗口**: 30秒更新周期，允许±1个时间窗口偏差
+6. **安全特性**: 防重放攻击、密钥安全存储、用户状态管理
+
+### 访问页面
+
+- **TOTP验证**: `/auth` - TOTP注册和登录页面
+- **验证码管理**: `/admin/auth-codes` - 管理员验证码管理
+
+### 推荐验证器应用
+
+- **Google Authenticator** - 免费，支持多平台
+- **Microsoft Authenticator** - 微软官方应用
+- **Authy** - 支持云同步和备份
+- **1Password** - 集成密码管理器
+
+### 使用流程
+
+1. **首次注册**:
+   ```bash
+   访问 /auth → 注册TOTP → 输入用户名 → 扫描二维码 → 输入验证码确认
+   ```
+
+2. **日常登录**:
+   ```bash
+   访问 /auth → TOTP登录 → 输入用户名和当前验证码
+   ```
+
+### 测试和开发
+
+```bash
+# 测试TOTP系统功能
+npm run totp:test
+
+# 测试传统身份验证系统
+npm run auth:test
+
+# 创建测试验证码数据
+npm run db:seed-auth
+```
+
 ## 📁 Project Structure
 
 ```
 src/
 ├── app/                    # Next.js App Router pages
 │   ├── admin/             # Admin management system
-│   │   ├── login/         # Admin login page
 │   │   ├── audio/         # Audio management
 │   │   ├── video/         # Video management
 │   │   ├── images/        # Image management
 │   │   ├── tutorials/     # Tutorial management
+│   │   ├── auth-codes/    # TOTP authentication management
 │   │   └── page.tsx       # Admin dashboard
-│   ├── api/               # API routes for admin operations
-│   │   └── admin/         # Admin API endpoints
+│   ├── api/               # API routes
+│   │   ├── admin/         # Admin API endpoints
+│   │   └── auth/          # TOTP authentication APIs
+│   ├── auth/              # TOTP authentication page
 │   ├── audio/             # Audio collection page
 │   ├── video/             # Video gallery page
 │   ├── images/            # Image gallery page

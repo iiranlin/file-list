@@ -10,13 +10,13 @@ import {
   Image as ImageIcon,
   BookOpen,
   Database,
+  Key,
   LogOut,
   Menu,
   X
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { isAuthenticated, logout } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 
@@ -42,6 +42,11 @@ const navigation = [
     icon: BookOpen,
   },
   {
+    name: "验证码管理",
+    href: "/admin/auth-codes",
+    icon: Key,
+  },
+  {
     name: "数据库迁移",
     href: "/admin/migrate",
     icon: Database,
@@ -59,13 +64,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      router.push("/admin/login")
+      router.push("/auth")
     }
   }, [router])
 
   const handleLogout = () => {
     logout()
-    router.push("/admin/login")
+    router.push("/auth")
   }
 
   if (!isAuthenticated()) {

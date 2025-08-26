@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm'
 import { db } from './connection'
-import { audioFiles, videoFiles, imageFiles, tutorials } from './schema'
-import type { NewAudioFile, NewVideoFile, NewImageFile, NewTutorial } from './schema'
+import { audioFiles, videoFiles, imageFiles, tutorials, authCodes } from './schema'
+import type { NewAudioFile, NewVideoFile, NewImageFile, NewTutorial, NewAuthCode } from './schema'
+import { verifyTOTP } from '../totp'
 
 // 音频服务
 export const audioService = {
@@ -167,6 +168,111 @@ export const tutorialService = {
   // 删除教程
   async delete(id: number) {
     const result = await db.delete(tutorials).where(eq(tutorials.id, id)).returning()
+    return result[0] || null
+  },
+}
+
+// 身份验证服务
+export const authService = {
+  // 获取所有验证码
+  async getAll() {
+    return await db.select().from(authCodes).orderBy(authCodes.createdAt)
+  },
+
+  // 根据用户名获取验证码
+  async getByUserName(userName: string) {
+    const result = await db.select().from(authCodes).where(eq(authCodes.userName, userName))
+    return result[0] || null
+  },
+
+  // 验证用户验证码和系统验证码
+  async verifyAuth(userName: string, userCode: string, systemCode: string) {
+    const authRecord = await this.getByUserName(userName)
+
+    if (!authRecord) {
+      return { success: false, message: '用户不存在' }
+    }
+
+    if (authRecord.isActive !== 1) {
+      return { success: false, message: '用户已被禁用' }
+    }
+
+    if (authRecord.userCode !== userCode) {
+      return { success: false, message: '用户验证码错误' }
+    }
+
+    if (authRecord.systemCode !== systemCode) {
+      return { success: false, message: '系统验证码错误' }
+    }
+
+    return { success: true, message: '验证成功', user: authRecord }
+  },
+
+  // 验证TOTP代码
+  async verifyTOTP(userName: string, totpCode: string) {
+    const authRecord = await this.getByUserName(userName)
+
+    if (!authRecord) {
+      return { success: false, message: '用户不存在' }
+    }
+
+    if (authRecord.isActive !== 1) {
+      return { success: false, message: '用户已被禁用' }
+    }
+
+    if (!authRecord.totpSecret) {
+      return { success: false, message: '用户未设置TOTP' }
+    }
+
+    const isValidTOTP = verifyTOTP(authRecord.totpSecret, totpCode)
+    if (!isValidTOTP) {
+      return { success: false, message: 'TOTP验证码错误' }
+    }
+
+    return { success: true, message: 'TOTP验证成功', user: authRecord }
+  },
+
+  // 创建验证码
+  async create(data: Omit<NewAuthCode, 'id' | 'createdAt' | 'updatedAt'>) {
+    const result = await db.insert(authCodes).values({
+      ...data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }).returning()
+    return result[0]
+  },
+
+  // 更新验证码
+  async update(id: number, data: Partial<Omit<NewAuthCode, 'id' | 'createdAt' | 'updatedAt'>>) {
+    const result = await db.update(authCodes)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(authCodes.id, id))
+      .returning()
+    return result[0] || null
+  },
+
+  // 删除验证码
+  async delete(id: number) {
+    const result = await db.delete(authCodes).where(eq(authCodes.id, id)).returning()
+    return result[0] || null
+  },
+
+  // 启用/禁用用户
+  async toggleActive(id: number) {
+    const current = await db.select().from(authCodes).where(eq(authCodes.id, id))
+    if (!current[0]) return null
+
+    const newStatus = current[0].isActive === 1 ? 0 : 1
+    const result = await db.update(authCodes)
+      .set({
+        isActive: newStatus,
+        updatedAt: new Date(),
+      })
+      .where(eq(authCodes.id, id))
+      .returning()
     return result[0] || null
   },
 }

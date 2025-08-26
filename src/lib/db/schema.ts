@@ -58,6 +58,18 @@ export const tutorials = pgTable('tutorials', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
+// 身份验证表
+export const authCodes = pgTable('auth_codes', {
+  id: serial('id').primaryKey(),
+  userName: varchar('user_name', { length: 255 }).notNull().unique(),
+  userCode: varchar('user_code', { length: 255 }).notNull(),
+  systemCode: varchar('system_code', { length: 255 }).notNull(),
+  totpSecret: varchar('totp_secret', { length: 255 }), // TOTP密钥
+  isActive: integer('is_active').default(1).notNull(), // 1=激活, 0=禁用
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
 // 导出类型
 export type AudioFile = typeof audioFiles.$inferSelect
 export type NewAudioFile = typeof audioFiles.$inferInsert
@@ -70,3 +82,6 @@ export type NewImageFile = typeof imageFiles.$inferInsert
 
 export type Tutorial = typeof tutorials.$inferSelect
 export type NewTutorial = typeof tutorials.$inferInsert
+
+export type AuthCode = typeof authCodes.$inferSelect
+export type NewAuthCode = typeof authCodes.$inferInsert
