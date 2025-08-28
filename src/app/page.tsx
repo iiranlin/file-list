@@ -4,6 +4,7 @@ import { Music, Video, Image as ImageIcon, BookOpen, ArrowRight } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loadAudioData, loadVideoData, loadImageData, loadTutorialData } from "@/lib/data-loader";
+import { LoadingButton, LoadingLink } from "@/components/loading-link";
 
 export default async function Home() {
   // 从JSON文件加载数据来获取实际数量
@@ -63,12 +64,14 @@ export default async function Home() {
           在这里，您可以探索我精心收藏的音频、视频、图片和教程。
           现代简洁的界面设计，让内容发现变得更加愉悦。
         </p>
-        <Button size="lg" asChild>
-          <Link href="/audio">
-            开始探索
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-        </Button>
+        <LoadingButton
+          href="/audio"
+          className="px-8 py-3 text-lg"
+          variant="default"
+        >
+          开始探索
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </LoadingButton>
       </div>
 
       {/* Content Grid */}
@@ -80,7 +83,7 @@ export default async function Home() {
               key={type.title}
               className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
-              <Link href={type.href}>
+              <LoadingLink href={type.href}>
                 <CardHeader>
                   <div className="flex items-center space-x-4">
                     <div className={`p-3 rounded-lg ${type.bgColor}`}>
@@ -102,7 +105,7 @@ export default async function Home() {
                     {type.description}
                   </p>
                 </CardContent>
-              </Link>
+              </LoadingLink>
             </Card>
           );
         })}

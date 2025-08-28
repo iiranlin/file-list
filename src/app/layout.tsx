@@ -5,6 +5,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConditionalNavigation } from "@/components/conditional-navigation";
 import { Toaster } from "@/components/ui/toaster";
+import { LoadingProvider } from "@/lib/loading-context";
+import { LoadingOverlay, TopLoadingBar } from "@/components/loading-overlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,13 +39,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <ConditionalNavigation />
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
-          <Toaster />
+          <LoadingProvider>
+            <TopLoadingBar />
+            <LoadingOverlay />
+            <div className="relative flex min-h-screen flex-col">
+              <ConditionalNavigation />
+              <main className="flex-1">
+                {children}
+              </main>
+            </div>
+            <Toaster />
+          </LoadingProvider>
         </ThemeProvider>
       </body>
     </html>

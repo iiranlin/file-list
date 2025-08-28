@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { LoadingLink } from "@/components/loading-link"
 
 const navigation = [
   {
@@ -55,12 +56,12 @@ export function Navigation() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-center">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-8">
-          <Link href="/" className="flex items-center space-x-2">
+          <LoadingLink href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">P</span>
             </div>
             <span className="font-bold text-xl">作品集</span>
-          </Link>
+          </LoadingLink>
           
           <nav className="hidden md:flex items-center space-x-6">
             {navigation.map((item) => {
@@ -99,7 +100,7 @@ export function Navigation() {
                   const Icon = item.icon
                   return (
                     <DropdownMenuItem key={item.name} asChild>
-                      <Link
+                      <LoadingLink
                         href={item.href}
                         className={cn(
                           "flex items-center space-x-2 w-full",
@@ -110,7 +111,7 @@ export function Navigation() {
                       >
                         <Icon className="h-4 w-4" />
                         <span>{item.name}</span>
-                      </Link>
+                      </LoadingLink>
                     </DropdownMenuItem>
                   )
                 })}
