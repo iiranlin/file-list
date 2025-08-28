@@ -60,7 +60,7 @@ export function TutorialFormDialog({ open, onOpenChange, editingItem, onSave }: 
         difficulty: "Beginner",
         readTime: "",
         author: "",
-        publishDate: new Date().toISOString().split('T')[0],
+        publishDate: typeof window !== 'undefined' ? new Date().toISOString().split('T')[0] : '',
         tags: "",
       })
     }

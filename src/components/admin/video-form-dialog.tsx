@@ -59,7 +59,7 @@ export function VideoFormDialog({ open, onOpenChange, editingItem, onSave }: Vid
         thumbnail: "",
         src: "",
         views: "",
-        uploadDate: new Date().toISOString().split('T')[0],
+        uploadDate: typeof window !== 'undefined' ? new Date().toISOString().split('T')[0] : '',
       })
     }
   }, [editingItem, open])
@@ -74,7 +74,8 @@ export function VideoFormDialog({ open, onOpenChange, editingItem, onSave }: Vid
         const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
         if (!user.userName) return {}
 
-        const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+        const timestamp = typeof window !== 'undefined' ? Date.now() : 0
+        const token = btoa(`${user.userName}:${user.id}:${timestamp}`)
         return {
           'Authorization': `Bearer ${token}`
         }

@@ -15,9 +15,10 @@ export function getAuthHeaders(): Record<string, string> {
     return {}
   }
 
-  // 生成认证token
-  const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
-  
+  // 生成认证token（仅在客户端）
+  const timestamp = typeof window !== 'undefined' ? Date.now() : 0
+  const token = btoa(`${user.userName}:${user.id}:${timestamp}`)
+
   return {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json',

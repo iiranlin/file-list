@@ -59,11 +59,18 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+  const [authenticated, setAuthenticated] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
 
+  // 客户端水合完成后检查认证状态
   useEffect(() => {
-    if (!isAuthenticated()) {
+    setIsClient(true)
+    const authStatus = isAuthenticated()
+    setAuthenticated(authStatus)
+
+    if (!authStatus) {
       router.push("/auth")
     }
   }, [router])
@@ -73,8 +80,25 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     router.push("/auth")
   }
 
-  if (!isAuthenticated()) {
-    return null // 或者显示加载状态
+  // 服务端渲染时显示加载状态，避免水合错误
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  // 客户端未认证时显示加载状态
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">正在验证身份...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

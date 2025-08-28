@@ -22,7 +22,8 @@ export default function AudioManagePage() {
     const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
     if (!user.userName) return {}
 
-    const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+    const timestamp = typeof window !== 'undefined' ? Date.now() : 0
+    const token = btoa(`${user.userName}:${user.id}:${timestamp}`)
     return {
       'Authorization': `Bearer ${token}`
     }

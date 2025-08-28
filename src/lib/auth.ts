@@ -16,8 +16,9 @@ export interface AuthUser {
 export function setAuthToken(user: AuthUser): void {
   if (typeof window === 'undefined') return
 
-  // 生成包含用户信息和时间戳的token
-  const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+  // 生成包含用户信息和时间戳的token（仅在客户端）
+  const timestamp = typeof window !== 'undefined' ? Date.now() : 0
+  const token = btoa(`${user.userName}:${user.id}:${timestamp}`)
   localStorage.setItem(AUTH_TOKEN_KEY, token)
   localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user))
 }
