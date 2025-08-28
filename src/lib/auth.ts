@@ -7,6 +7,10 @@ const AUTH_USER_KEY = 'totp_auth_user'
 export interface AuthUser {
   id: number
   userName: string
+  role: string
+  displayName?: string
+  email?: string
+  avatar?: string
 }
 
 export function setAuthToken(user: AuthUser): void {

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "@/lib/toast"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -68,22 +69,36 @@ export function AudioFormDialog({ open, onOpenChange, editingItem, onSave }: Aud
         ? { ...formData, id: editingItem.id }
         : formData
 
+      // 获取认证头
+      const getAuthHeaders = (): Record<string, string> => {
+        const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
+        if (!user.userName) return {}
+
+        const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+        return {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
         body: JSON.stringify(body),
       })
 
       if (response.ok) {
         onSave()
+        toast.operation.success(editingItem ? '更新' : '创建', '音频')
       } else {
-        alert('保存失败')
+        const error = await response.json().catch(() => ({}))
+        toast.operation.failed('保存', error.error)
       }
     } catch (error) {
       console.error('Failed to save audio:', error)
-      alert('保存失败')
+      toast.operation.failed('保存', '网络错误')
     } finally {
       setIsLoading(false)
     }
@@ -180,7 +195,7 @@ export function AudioFormDialog({ open, onOpenChange, editingItem, onSave }: Aud
                   }}
                   onUploadError={(error) => {
                     console.error('Upload error:', error)
-                    alert(`上传失败: ${error}`)
+                    toast.upload.failed(error)
                   }}
                   accept="audio/*"
                   maxSize={50}

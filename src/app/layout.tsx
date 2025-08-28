@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
-import { Navigation } from "@/components/navigation";
+import { ConditionalNavigation } from "@/components/conditional-navigation";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,11 +38,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="relative flex min-h-screen flex-col">
-            <Navigation />
+            <ConditionalNavigation />
             <main className="flex-1">
               {children}
             </main>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -18,6 +18,10 @@
     "auth:test": "tsx scripts/test-auth-system.ts",
     "totp:test": "tsx scripts/test-totp-system.ts",
     "auth:flow": "tsx scripts/test-auth-flow.ts",
+    "admin:create": "tsx scripts/create-admin.ts",
+    "permissions:test": "tsx scripts/test-permissions.ts",
+    "permissions:verify": "tsx scripts/verify-permissions.ts",
+    "api:test": "tsx scripts/test-api-permissions.ts",
     "qiniu:test": "tsx scripts/test-qiniu.ts"
   },
   "dependencies": {
@@ -31,6 +35,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-toast": "^1.2.15",
     "@types/pg": "^8.15.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

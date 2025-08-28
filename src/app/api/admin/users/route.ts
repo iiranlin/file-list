@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { audioService } from '@/lib/db/services'
+import { authService } from '@/lib/db/services'
 import { checkApiPermission } from '@/lib/server-permissions'
 
 export async function GET() {
   try {
     // 读取权限不限制，所有用户都可以访问
-    const data = await audioService.getAll()
-    return NextResponse.json(data)
+    const data = await authService.getAll()
+    return NextResponse.json({
+      data,
+      user: null // 由于不再检查权限，用户信息设为null
+    })
   } catch (error) {
-    console.error('Failed to load audio data:', error)
-    return NextResponse.json({ error: 'Failed to load audio data' }, { status: 500 })
+    console.error('Failed to load users:', error)
+    return NextResponse.json({ error: 'Failed to load users' }, { status: 500 })
   }
 }
 
@@ -26,19 +29,23 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
 
-    const newItem = await audioService.create({
-      title: body.title,
-      artist: body.artist,
-      duration: body.duration,
-      genre: body.genre,
-      src: body.src,
-      description: body.description,
+    const newItem = await authService.create({
+      userName: body.userName,
+      userCode: body.userCode || 'temp',
+      systemCode: body.systemCode || 'temp',
+      totpSecret: body.totpSecret,
+      role: body.role || 'user',
+      displayName: body.displayName,
+      email: body.email,
+      avatar: body.avatar,
+      bio: body.bio,
+      isActive: body.isActive ?? 1,
     })
 
     return NextResponse.json(newItem, { status: 201 })
   } catch (error) {
-    console.error('Failed to create audio item:', error)
-    return NextResponse.json({ error: 'Failed to create audio item' }, { status: 500 })
+    console.error('Failed to create user:', error)
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })
   }
 }
 
@@ -55,23 +62,27 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json()
 
-    const updatedItem = await audioService.update(body.id, {
-      title: body.title,
-      artist: body.artist,
-      duration: body.duration,
-      genre: body.genre,
-      src: body.src,
-      description: body.description,
+    const updatedItem = await authService.update(body.id, {
+      userName: body.userName,
+      userCode: body.userCode,
+      systemCode: body.systemCode,
+      totpSecret: body.totpSecret,
+      role: body.role,
+      displayName: body.displayName,
+      email: body.email,
+      avatar: body.avatar,
+      bio: body.bio,
+      isActive: body.isActive,
     })
 
     if (!updatedItem) {
-      return NextResponse.json({ error: 'Audio item not found' }, { status: 404 })
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     return NextResponse.json(updatedItem)
   } catch (error) {
-    console.error('Failed to update audio item:', error)
-    return NextResponse.json({ error: 'Failed to update audio item' }, { status: 500 })
+    console.error('Failed to update user:', error)
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 })
   }
 }
 
@@ -89,15 +100,15 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const id = parseInt(searchParams.get('id') || '0')
 
-    const deletedItem = await audioService.delete(id)
+    const deletedItem = await authService.delete(id)
 
     if (!deletedItem) {
-      return NextResponse.json({ error: 'Audio item not found' }, { status: 404 })
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Failed to delete audio item:', error)
-    return NextResponse.json({ error: 'Failed to delete audio item' }, { status: 500 })
+    console.error('Failed to delete user:', error)
+    return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 })
   }
 }

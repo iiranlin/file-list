@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Plus, Edit, Trash2, Music } from "lucide-react"
+import { toast } from "@/lib/toast"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,9 +17,25 @@ export default function AudioManagePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<AudioFile | null>(null)
 
+  // 获取认证头
+  const getAuthHeaders = (): Record<string, string> => {
+    const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
+    if (!user.userName) return {}
+
+    const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+    return {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   const fetchAudioFiles = async () => {
     try {
-      const response = await fetch('/api/admin/audio')
+      const response = await fetch('/api/admin/audio', {
+        headers: getAuthHeaders()
+      })
+
+
+
       const data = await response.json()
       setAudioFiles(data)
     } catch (error) {
@@ -48,16 +65,23 @@ export default function AudioManagePage() {
     try {
       const response = await fetch(`/api/admin/audio?id=${id}`, {
         method: 'DELETE',
+        headers: getAuthHeaders()
       })
+
+      if (response.status === 403) {
+        toast.permission.denied('删除音频')
+        return
+      }
 
       if (response.ok) {
         await fetchAudioFiles()
+        toast.operation.success('删除', '音频文件')
       } else {
-        alert('删除失败')
+        toast.operation.failed('删除')
       }
     } catch (error) {
       console.error('Failed to delete audio file:', error)
-      alert('删除失败')
+      toast.operation.failed('删除', '网络错误')
     }
   }
 

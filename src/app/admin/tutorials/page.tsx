@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Plus, Edit, Trash2, BookOpen } from "lucide-react"
+import { toast } from "@/lib/toast"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -30,13 +31,31 @@ export default function TutorialManagePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<Tutorial | null>(null)
 
+  // 获取认证头
+  const getAuthHeaders = (): Record<string, string> => {
+    const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
+    if (!user.userName) return {}
+
+    const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+    return {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   const fetchTutorials = async () => {
     try {
-      const response = await fetch('/api/admin/tutorials')
+      const response = await fetch('/api/admin/tutorials', {
+        headers: getAuthHeaders()
+      })
+
+
+
       const data = await response.json()
-      setTutorials(data)
+      // 确保data是数组
+      setTutorials(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch tutorials:', error)
+      setTutorials([]) // 确保设置为空数组
     } finally {
       setIsLoading(false)
     }
@@ -62,16 +81,24 @@ export default function TutorialManagePage() {
     try {
       const response = await fetch(`/api/admin/tutorials?id=${id}`, {
         method: 'DELETE',
+        headers: getAuthHeaders()
       })
+
+      if (response.status === 403) {
+        const error = await response.json()
+        toast.warning(error.error || '权限不足')
+        return
+      }
 
       if (response.ok) {
         await fetchTutorials()
+        toast.success('教程删除成功')
       } else {
-        alert('删除失败')
+        toast.warning('删除失败')
       }
     } catch (error) {
       console.error('Failed to delete tutorial:', error)
-      alert('删除失败')
+      toast.warning('删除失败')
     }
   }
 

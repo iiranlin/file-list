@@ -232,6 +232,37 @@ export const authService = {
     return { success: true, message: 'TOTP验证成功', user: authRecord }
   },
 
+  // 检查用户是否为管理员
+  async isAdmin(userName: string) {
+    const user = await this.getByUserName(userName)
+    return user?.role === 'admin'
+  },
+
+  // 检查用户权限
+  async checkPermission(userName: string, action: 'read' | 'write' | 'delete') {
+    const user = await this.getByUserName(userName)
+
+    if (!user) {
+      return { hasPermission: false, message: '用户不存在' }
+    }
+
+    if (user.isActive !== 1) {
+      return { hasPermission: false, message: '用户已被禁用' }
+    }
+
+    // 管理员拥有所有权限
+    if (user.role === 'admin') {
+      return { hasPermission: true, message: '管理员权限' }
+    }
+
+    // 普通用户只有读取权限
+    if (action === 'read') {
+      return { hasPermission: true, message: '用户读取权限' }
+    }
+
+    return { hasPermission: false, message: '权限不足，仅管理员可执行此操作' }
+  },
+
   // 创建验证码
   async create(data: Omit<NewAuthCode, 'id' | 'createdAt' | 'updatedAt'>) {
     const result = await db.insert(authCodes).values({

@@ -255,8 +255,10 @@ curl "http://localhost:3000/api/upload/test?fileName=test.jpg&type=image"
 
 ### 访问页面
 
-- **TOTP验证**: `/auth` - TOTP注册和登录页面
-- **验证码管理**: `/admin/auth-codes` - 管理员验证码管理
+- **TOTP验证**: `/auth` - TOTP注册和登录页面（隐藏主导航栏）
+- **用户管理**: `/admin/users` - 基于角色的用户管理系统
+- **导航测试**: `/test-navigation` - 测试导航栏显示/隐藏功能
+
 
 ### 推荐验证器应用
 
@@ -288,6 +290,77 @@ npm run auth:test
 
 # 创建测试验证码数据
 npm run db:seed-auth
+
+# 创建管理员用户
+npm run admin:create
+```
+
+### 权限控制系统
+
+项目实现了基于角色的权限控制：
+
+#### 用户角色
+- **管理员 (admin)**: 拥有所有权限，可以查看、创建、编辑、删除所有内容
+- **普通用户 (user)**: 仅有读取权限，可以查看内容但无法修改
+
+#### 权限级别
+- **读取权限 (read)**: 查看数据（所有用户都有此权限）
+- **写入权限 (write)**: 创建和编辑数据
+- **删除权限 (delete)**: 删除数据
+
+#### 权限验证
+- **读取权限**: 不受限制，所有用户都可以查看数据
+- **写入/删除权限**: 需要TOTP验证和相应角色权限
+- **前端**: 基于用户角色显示/隐藏操作按钮
+- **后端**: API级别的权限验证，防止绕过前端限制
+- **错误提示**: 权限不足时显示友好的错误信息
+
+#### 受保护的API端点
+- `/api/admin/audio` - 音频管理 (需要相应权限)
+- `/api/admin/video` - 视频管理 (需要相应权限)
+- `/api/admin/images` - 图片管理 (需要相应权限)
+- `/api/admin/tutorials` - 教程管理 (需要相应权限)
+- `/api/admin/users` - 用户管理 (需要相应权限)
+- `/api/upload` - 文件上传 (需要写入权限)
+
+#### 用户界面改进
+- **Toast通知**: 使用 Radix UI Toast 组件，显示在右上角
+- **类型区分**: 成功、错误、警告、信息等不同类型的提示
+- **权限提示**: 权限不足时的专用提示样式
+- **操作反馈**: 创建、更新、删除操作的即时反馈
+- **网络提示**: 网络错误、超时等专用提示
+- **上传提示**: 文件上传成功/失败的专用提示
+- **条件导航**: 根据页面类型智能显示/隐藏导航栏
+
+#### Toast配置特性
+- **智能定位**: 右上角显示，在导航栏下方，不遮挡主要内容
+- **最高层级**: z-index: 2147483647，永远浮在最上层
+- **纯色背景**: 使用完全不透明的背景，清晰可读
+- **主题适配**: 自动适配深色/浅色主题
+- **响应式**: 移动端自适应布局
+- **可访问性**: 符合 WCAG 标准的无障碍设计
+
+#### 导航栏配置
+- **主站页面**: 显示主导航栏（首页、关于、联系等）
+- **Admin管理系统**: 隐藏主导航栏，显示admin专用导航栏
+- **认证页面**: 隐藏主导航栏，专注于认证功能
+- **智能切换**: 基于路径自动切换导航栏显示
+- **返回功能**: Admin页面提供"返回网站"链接
+
+#### 管理员功能
+```bash
+# 创建管理员账户
+npm run admin:create
+
+# 测试权限控制系统
+npm run permissions:test
+
+# 验证权限控制修复
+npm run permissions:verify
+
+# 测试API权限控制（需要先启动服务器）
+npm run dev  # 在另一个终端运行
+npm run api:test
 ```
 
 ## 📁 Project Structure
@@ -300,7 +373,7 @@ src/
 │   │   ├── video/         # Video management
 │   │   ├── images/        # Image management
 │   │   ├── tutorials/     # Tutorial management
-│   │   ├── auth-codes/    # TOTP authentication management
+│   │   ├── users/         # User management with role-based permissions
 │   │   └── page.tsx       # Admin dashboard
 │   ├── api/               # API routes
 │   │   ├── admin/         # Admin API endpoints

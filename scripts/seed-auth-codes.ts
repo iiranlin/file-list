@@ -30,7 +30,7 @@ async function seedAuthCodes() {
         userName: 'demo',
         userCode: 'demo123',
         systemCode: 'demo456',
-        isActive: 0, // 禁用状态
+        isActive: 1, // 默认启用状态
       },
     ]
 

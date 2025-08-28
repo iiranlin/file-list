@@ -23,6 +23,10 @@ export async function POST(request: NextRequest) {
         user: {
           id: result.user?.id,
           userName: result.user?.userName,
+          role: result.user?.role || 'user',
+          displayName: result.user?.displayName,
+          email: result.user?.email,
+          avatar: result.user?.avatar,
         },
       })
     } else {

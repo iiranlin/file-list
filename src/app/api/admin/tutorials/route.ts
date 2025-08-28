@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { tutorialService } from '@/lib/db/services'
+import { checkApiPermission } from '@/lib/server-permissions'
 
 export async function GET() {
   try {
+    // 读取权限不限制，所有用户都可以访问
     const data = await tutorialService.getAll()
     // 将数据库中的tags JSON字符串转换为数组
     const formattedData = data.map(item => ({
@@ -18,6 +20,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    // 检查写入权限
+    const permissionResult = await checkApiPermission(request, 'write')
+    if (!permissionResult.hasPermission) {
+      return NextResponse.json({
+        error: permissionResult.message,
+        code: 'PERMISSION_DENIED'
+      }, { status: 403 })
+    }
+
     const body = await request.json()
 
     // 处理标签：如果是字符串则分割，如果是数组则直接使用
@@ -52,6 +63,15 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    // 检查写入权限
+    const permissionResult = await checkApiPermission(request, 'write')
+    if (!permissionResult.hasPermission) {
+      return NextResponse.json({
+        error: permissionResult.message,
+        code: 'PERMISSION_DENIED'
+      }, { status: 403 })
+    }
+
     const body = await request.json()
 
     // 处理标签：如果是字符串则分割，如果是数组则直接使用
@@ -90,6 +110,15 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    // 检查删除权限
+    const permissionResult = await checkApiPermission(request, 'delete')
+    if (!permissionResult.hasPermission) {
+      return NextResponse.json({
+        error: permissionResult.message,
+        code: 'PERMISSION_DENIED'
+      }, { status: 403 })
+    }
+
     const { searchParams } = new URL(request.url)
     const id = parseInt(searchParams.get('id') || '0')
 

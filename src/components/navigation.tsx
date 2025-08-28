@@ -17,29 +17,34 @@ import {
 
 const navigation = [
   {
-    name: "Home",
+    name: "首页",
     href: "/",
     icon: Home,
   },
   {
-    name: "Audio",
+    name: "音频",
     href: "/audio",
     icon: Music,
   },
   {
-    name: "Video",
+    name: "视频",
     href: "/video",
     icon: Video,
   },
   {
-    name: "Images",
+    name: "图片",
     href: "/images",
     icon: Image,
   },
   {
-    name: "Tutorials",
+    name: "教程",
     href: "/tutorials",
     icon: BookOpen,
+  },
+  {
+    name:"后台管理",
+    href: "/admin",
+    icon: Menu,
   },
 ]
 
@@ -47,14 +52,14 @@ export function Navigation() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-center">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">P</span>
             </div>
-            <span className="font-bold text-xl">Portfolio</span>
+            <span className="font-bold text-xl">作品集</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-6">

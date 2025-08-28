@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Plus, Edit, Trash2, Video } from "lucide-react"
+import { toast } from "@/lib/toast"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,13 +17,31 @@ export default function VideoManagePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<VideoFile | null>(null)
 
+  // 获取认证头
+  const getAuthHeaders = (): Record<string, string> => {
+    const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
+    if (!user.userName) return {}
+
+    const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+    return {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   const fetchVideoFiles = async () => {
     try {
-      const response = await fetch('/api/admin/video')
+      const response = await fetch('/api/admin/video', {
+        headers: getAuthHeaders()
+      })
+
+
+
       const data = await response.json()
-      setVideoFiles(data)
+      // 确保data是数组
+      setVideoFiles(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch video files:', error)
+      setVideoFiles([]) // 确保设置为空数组
     } finally {
       setIsLoading(false)
     }
@@ -48,16 +67,23 @@ export default function VideoManagePage() {
     try {
       const response = await fetch(`/api/admin/video?id=${id}`, {
         method: 'DELETE',
+        headers: getAuthHeaders()
       })
+
+      if (response.status === 403) {
+        toast.permission.denied('删除视频')
+        return
+      }
 
       if (response.ok) {
         await fetchVideoFiles()
+        toast.operation.success('删除', '视频文件')
       } else {
-        alert('删除失败')
+        toast.operation.failed('删除')
       }
     } catch (error) {
       console.error('Failed to delete video file:', error)
-      alert('删除失败')
+      toast.operation.failed('删除', '网络错误')
     }
   }
 

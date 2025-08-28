@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { uploadFile, FileType, getUploadToken, generateFileKey, getFileUrl } from '@/lib/qiniu/upload'
+import { checkApiPermission } from '@/lib/server-permissions'
 
 // 获取上传凭证的API
 export async function GET(request: NextRequest) {
   try {
+    // 检查写入权限 - 上传文件需要写入权限
+    const permissionResult = await checkApiPermission(request, 'write')
+    if (!permissionResult.hasPermission) {
+      return NextResponse.json({
+        error: permissionResult.message,
+        code: 'PERMISSION_DENIED'
+      }, { status: 403 })
+    }
+
     const { searchParams } = new URL(request.url)
     const fileType = searchParams.get('type') as FileType
     const fileName = searchParams.get('fileName')
@@ -44,6 +54,15 @@ export async function GET(request: NextRequest) {
 // 服务端文件上传API
 export async function POST(request: NextRequest) {
   try {
+    // 检查写入权限 - 上传文件需要写入权限
+    const permissionResult = await checkApiPermission(request, 'write')
+    if (!permissionResult.hasPermission) {
+      return NextResponse.json({
+        error: permissionResult.message,
+        code: 'PERMISSION_DENIED'
+      }, { status: 403 })
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File
     const fileType = formData.get('type') as FileType

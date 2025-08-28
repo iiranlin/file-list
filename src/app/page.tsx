@@ -16,40 +16,40 @@ export default async function Home() {
 
   const contentTypes = [
     {
-      title: "Audio Collection",
-      description: "Discover my curated audio files with built-in player controls",
+      title: "音频收藏",
+      description: "聆听精心挑选的音频作品，享受内置播放器的便捷体验",
       icon: Music,
       href: "/audio",
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/20",
-      count: `${audioFiles.length} tracks`,
+      count: `${audioFiles.length} 首音频`,
     },
     {
-      title: "Video Gallery",
-      description: "Watch videos with thumbnail previews and modal playback",
+      title: "视频画廊",
+      description: "观赏精彩视频内容，支持缩略图预览和弹窗播放",
       icon: Video,
       href: "/video",
       color: "text-red-500",
       bgColor: "bg-red-50 dark:bg-red-950/20",
-      count: `${videoFiles.length} videos`,
+      count: `${videoFiles.length} 个视频`,
     },
     {
-      title: "Image Gallery",
-      description: "Browse through images with lightbox preview functionality",
+      title: "图片展览",
+      description: "浏览美丽的图片作品，配备灯箱预览功能",
       icon: ImageIcon,
       href: "/images",
       color: "text-green-500",
       bgColor: "bg-green-50 dark:bg-green-950/20",
-      count: `${imageFiles.length} images`,
+      count: `${imageFiles.length} 张图片`,
     },
     {
-      title: "Tutorials",
-      description: "Read tutorials and documents with expandable content",
+      title: "教程文档",
+      description: "阅读详细的教程和文档，支持内容展开和收起",
       icon: BookOpen,
       href: "/tutorials",
       color: "text-purple-500",
       bgColor: "bg-purple-50 dark:bg-purple-950/20",
-      count: `${tutorials.length} tutorials`,
+      count: `${tutorials.length} 篇教程`,
     },
   ];
   return (
@@ -65,7 +65,7 @@ export default async function Home() {
         </p>
         <Button size="lg" asChild>
           <Link href="/audio">
-            Start Exploring
+            开始探索
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>

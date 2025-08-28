@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Plus, Edit, Trash2, Image as ImageIcon } from "lucide-react"
+import { toast } from "@/lib/toast"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,13 +18,31 @@ export default function ImageManagePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ImageFile | null>(null)
 
+  // 获取认证头
+  const getAuthHeaders = (): Record<string, string> => {
+    const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
+    if (!user.userName) return {}
+
+    const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+    return {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   const fetchImageFiles = async () => {
     try {
-      const response = await fetch('/api/admin/images')
+      const response = await fetch('/api/admin/images', {
+        headers: getAuthHeaders()
+      })
+
+
+
       const data = await response.json()
-      setImageFiles(data)
+      // 确保data是数组
+      setImageFiles(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Failed to fetch image files:', error)
+      setImageFiles([]) // 确保设置为空数组
     } finally {
       setIsLoading(false)
     }
@@ -49,16 +68,24 @@ export default function ImageManagePage() {
     try {
       const response = await fetch(`/api/admin/images?id=${id}`, {
         method: 'DELETE',
+        headers: getAuthHeaders()
       })
+
+      if (response.status === 403) {
+        const error = await response.json()
+        toast.warning(error.error || '权限不足')
+        return
+      }
 
       if (response.ok) {
         await fetchImageFiles()
+        toast.success('图片文件删除成功')
       } else {
-        alert('删除失败')
+        toast.warning('删除失败')
       }
     } catch (error) {
       console.error('Failed to delete image file:', error)
-      alert('删除失败')
+      toast.warning('删除失败')
     }
   }
 

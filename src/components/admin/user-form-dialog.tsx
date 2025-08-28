@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Shield, User, Key, Lock } from "lucide-react"
+import { Shield, User, Key, Lock, Crown, Mail, FileText } from "lucide-react"
+import { toast } from "@/lib/toast"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,34 +16,56 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
-interface AuthCode {
+interface UserData {
   id: number
   userName: string
   userCode: string
   systemCode: string
+  totpSecret?: string
+  role: string
+  displayName?: string
+  email?: string
+  avatar?: string
+  bio?: string
   isActive: number
   createdAt: string
   updatedAt: string
 }
 
-interface AuthCodeFormDialogProps {
+interface UserFormDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  editingItem: AuthCode | null
+  editingItem: UserData | null
   onSubmit: () => void
+  getAuthHeaders: () => Record<string, string>
 }
 
-export function AuthCodeFormDialog({
+export function UserFormDialog({
   open,
   onOpenChange,
   editingItem,
   onSubmit,
-}: AuthCodeFormDialogProps) {
+  getAuthHeaders,
+}: UserFormDialogProps) {
   const [formData, setFormData] = useState({
     userName: '',
     userCode: '',
     systemCode: '',
+    totpSecret: '',
+    role: 'user',
+    displayName: '',
+    email: '',
+    avatar: '',
+    bio: '',
     isActive: true,
   })
   const [loading, setLoading] = useState(false)
@@ -53,6 +76,12 @@ export function AuthCodeFormDialog({
       userName: '',
       userCode: '',
       systemCode: '',
+      totpSecret: '',
+      role: 'user',
+      displayName: '',
+      email: '',
+      avatar: '',
+      bio: '',
       isActive: true,
     })
   }
@@ -64,6 +93,12 @@ export function AuthCodeFormDialog({
         userName: editingItem.userName,
         userCode: editingItem.userCode,
         systemCode: editingItem.systemCode,
+        totpSecret: editingItem.totpSecret || '',
+        role: editingItem.role || 'user',
+        displayName: editingItem.displayName || '',
+        email: editingItem.email || '',
+        avatar: editingItem.avatar || '',
+        bio: editingItem.bio || '',
         isActive: editingItem.isActive === 1,
       })
     } else {
@@ -92,7 +127,7 @@ export function AuthCodeFormDialog({
     setLoading(true)
 
     try {
-      const url = '/api/admin/auth-codes'
+      const url = '/api/admin/users'
       const method = editingItem ? 'PUT' : 'POST'
       const body = editingItem
         ? { ...formData, id: editingItem.id, isActive: formData.isActive ? 1 : 0 }
@@ -102,6 +137,7 @@ export function AuthCodeFormDialog({
         method,
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
         body: JSON.stringify(body),
       })
@@ -109,19 +145,20 @@ export function AuthCodeFormDialog({
       if (response.ok) {
         onSubmit()
         resetForm()
+        toast.success(editingItem ? '用户更新成功' : '用户创建成功')
       } else {
         const error = await response.json()
-        alert(error.error || '操作失败')
+        toast.warning(error.error || '操作失败')
       }
     } catch (error) {
       console.error('Submit failed:', error)
-      alert('操作失败')
+      toast.warning('操作失败')
     } finally {
       setLoading(false)
     }
   }
 
-  const isFormValid = formData.userName && formData.userCode && formData.systemCode
+  const isFormValid = formData.userName
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -129,14 +166,14 @@ export function AuthCodeFormDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-blue-500" />
-            {editingItem ? '编辑验证码' : '添加验证码'}
+            {editingItem ? '编辑用户' : '添加用户'}
           </DialogTitle>
           <DialogDescription>
-            {editingItem ? '修改用户验证码信息' : '创建新的用户验证码'}
+            {editingItem ? '修改用户信息和权限设置' : '创建新的系统用户'}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 max-h-[60vh] overflow-y-auto">
           {/* 用户名 */}
           <div className="space-y-2">
             <Label htmlFor="userName" className="flex items-center gap-2">
@@ -153,57 +190,90 @@ export function AuthCodeFormDialog({
             />
           </div>
 
-          {/* 用户验证码 */}
+          {/* 显示名称 */}
           <div className="space-y-2">
-            <Label htmlFor="userCode" className="flex items-center gap-2">
-              <Key className="h-4 w-4" />
-              用户验证码 *
+            <Label htmlFor="displayName" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              显示名称
             </Label>
-            <div className="flex gap-2">
-              <Input
-                id="userCode"
-                value={formData.userCode}
-                onChange={(e) => handleChange('userCode', e.target.value)}
-                placeholder="请输入用户验证码"
-                required
-                disabled={loading}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleChange('userCode', generateRandomCode())}
-                disabled={loading}
-              >
-                生成
-              </Button>
-            </div>
+            <Input
+              id="displayName"
+              value={formData.displayName}
+              onChange={(e) => handleChange('displayName', e.target.value)}
+              placeholder="请输入显示名称"
+              disabled={loading}
+            />
           </div>
 
-          {/* 系统验证码 */}
+          {/* 邮箱 */}
           <div className="space-y-2">
-            <Label htmlFor="systemCode" className="flex items-center gap-2">
-              <Lock className="h-4 w-4" />
-              系统验证码 *
+            <Label htmlFor="email" className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              邮箱
             </Label>
-            <div className="flex gap-2">
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleChange('email', e.target.value)}
+              placeholder="请输入邮箱地址"
+              disabled={loading}
+            />
+          </div>
+
+          {/* 用户角色 */}
+          <div className="space-y-2">
+            <Label htmlFor="role" className="flex items-center gap-2">
+              <Crown className="h-4 w-4" />
+              用户角色 *
+            </Label>
+            <Select
+              value={formData.role}
+              onValueChange={(value) => handleChange('role', value)}
+              disabled={loading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="选择用户角色" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">普通用户</SelectItem>
+                <SelectItem value="admin">管理员</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 个人简介 */}
+          <div className="space-y-2">
+            <Label htmlFor="bio" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              个人简介
+            </Label>
+            <Textarea
+              id="bio"
+              value={formData.bio}
+              onChange={(e) => handleChange('bio', e.target.value)}
+              placeholder="请输入个人简介"
+              disabled={loading}
+              rows={3}
+            />
+          </div>
+
+          {/* TOTP密钥 (仅编辑时显示) */}
+          {editingItem && (
+            <div className="space-y-2">
+              <Label htmlFor="totpSecret" className="flex items-center gap-2">
+                <Key className="h-4 w-4" />
+                TOTP密钥
+              </Label>
               <Input
-                id="systemCode"
-                value={formData.systemCode}
-                onChange={(e) => handleChange('systemCode', e.target.value)}
-                placeholder="请输入系统验证码"
-                required
+                id="totpSecret"
+                value={formData.totpSecret}
+                onChange={(e) => handleChange('totpSecret', e.target.value)}
+                placeholder="TOTP密钥（留空保持不变）"
                 disabled={loading}
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleChange('systemCode', generateRandomCode())}
-                disabled={loading}
-              >
-                生成
-              </Button>
             </div>
-          </div>
+          )}
 
           {/* 状态开关 */}
           <div className="flex items-center justify-between">

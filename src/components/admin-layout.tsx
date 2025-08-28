@@ -42,8 +42,8 @@ const navigation = [
     icon: BookOpen,
   },
   {
-    name: "验证码管理",
-    href: "/admin/auth-codes",
+    name: "用户管理",
+    href: "/admin/users",
     icon: Key,
   },
   {
@@ -80,7 +80,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* 顶部导航栏 */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-center">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button

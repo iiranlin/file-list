@@ -26,13 +26,13 @@ export async function POST(request: NextRequest) {
     // 生成TOTP注册数据
     const registrationData = await generateUserRegistration(userName)
 
-    // 创建用户记录（暂时不激活，等待用户确认）
+    // 创建用户记录（默认启用）
     await authService.create({
       userName,
       userCode: 'temp', // 临时值，TOTP模式下不使用
       systemCode: 'temp', // 临时值，TOTP模式下不使用
       totpSecret: registrationData.secret,
-      isActive: 0, // 暂时禁用，等待用户确认
+      isActive: 1, // 默认启用
     })
 
     return NextResponse.json({
@@ -71,15 +71,9 @@ export async function PUT(request: NextRequest) {
     const result = await authService.verifyTOTP(userName, totpCode)
 
     if (result.success) {
-      // 激活用户
-      const user = await authService.getByUserName(userName)
-      if (user) {
-        await authService.update(user.id, { isActive: 1 })
-      }
-
       return NextResponse.json({
         success: true,
-        message: 'TOTP注册确认成功，用户已激活',
+        message: 'TOTP注册确认成功',
       })
     } else {
       return NextResponse.json(

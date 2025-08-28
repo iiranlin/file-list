@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { toast } from "@/lib/toast"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -70,9 +71,20 @@ export function TutorialFormDialog({ open, onOpenChange, editingItem, onSave }: 
     setIsLoading(true)
 
     try {
+      // 获取认证头
+      const getAuthHeaders = (): Record<string, string> => {
+        const user = JSON.parse(localStorage.getItem('totp_auth_user') || '{}')
+        if (!user.userName) return {}
+
+        const token = btoa(`${user.userName}:${user.id}:${Date.now()}`)
+        return {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+
       const url = '/api/admin/tutorials'
       const method = editingItem ? 'PUT' : 'POST'
-      const body = editingItem 
+      const body = editingItem
         ? { ...formData, id: editingItem.id }
         : formData
 
@@ -80,18 +92,27 @@ export function TutorialFormDialog({ open, onOpenChange, editingItem, onSave }: 
         method,
         headers: {
           'Content-Type': 'application/json',
+          ...getAuthHeaders(),
         },
         body: JSON.stringify(body),
       })
 
+      if (response.status === 403) {
+        const error = await response.json()
+        toast.warning(error.error || '权限不足')
+        return
+      }
+
       if (response.ok) {
         onSave()
+        toast.success(editingItem ? '教程更新成功' : '教程创建成功')
       } else {
-        alert('保存失败')
+        const error = await response.json().catch(() => ({}))
+        toast.warning(error.error || '保存失败')
       }
     } catch (error) {
       console.error('Failed to save tutorial:', error)
-      alert('保存失败')
+      toast.warning('保存失败')
     } finally {
       setIsLoading(false)
     }

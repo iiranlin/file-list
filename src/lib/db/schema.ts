@@ -58,13 +58,18 @@ export const tutorials = pgTable('tutorials', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
-// 身份验证表
+// 用户表
 export const authCodes = pgTable('auth_codes', {
   id: serial('id').primaryKey(),
   userName: varchar('user_name', { length: 255 }).notNull().unique(),
   userCode: varchar('user_code', { length: 255 }).notNull(),
   systemCode: varchar('system_code', { length: 255 }).notNull(),
   totpSecret: varchar('totp_secret', { length: 255 }), // TOTP密钥
+  role: varchar('role', { length: 50 }).default('user').notNull(), // 用户角色: admin, user
+  displayName: varchar('display_name', { length: 255 }), // 显示名称
+  email: varchar('email', { length: 255 }), // 邮箱
+  avatar: varchar('avatar', { length: 500 }), // 头像URL
+  bio: varchar('bio', { length: 1000 }), // 个人简介
   isActive: integer('is_active').default(1).notNull(), // 1=激活, 0=禁用
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
