@@ -19,10 +19,10 @@ export default async function TutorialsPage() {
             <BookOpen className="h-8 w-8 text-purple-500" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold mb-4">Tutorials</h1>
+        <h1 className="text-4xl font-bold mb-4">教程文档</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Read tutorials and documents with expandable content. Each tutorial features 
-          clean typography and detailed information to help you learn effectively.
+          阅读详细的教程和文档，支持内容展开和收起。每篇教程都采用
+          清晰的排版和详细的信息，帮助您高效学习。
         </p>
       </div>
 
@@ -30,19 +30,19 @@ export default async function TutorialsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">{tutorials.length}</div>
-          <div className="text-sm text-muted-foreground">Total Tutorials</div>
+          <div className="text-sm text-muted-foreground">教程总数</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">{categories.length}</div>
-          <div className="text-sm text-muted-foreground">Categories</div>
+          <div className="text-sm text-muted-foreground">教程分类</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">{difficulties.length}</div>
-          <div className="text-sm text-muted-foreground">Difficulty Levels</div>
+          <div className="text-sm text-muted-foreground">难度等级</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
-          <div className="text-2xl font-bold text-primary">45 min</div>
-          <div className="text-sm text-muted-foreground">Total Read Time</div>
+          <div className="text-2xl font-bold text-primary">45 分钟</div>
+          <div className="text-sm text-muted-foreground">总阅读时长</div>
         </div>
       </div>
 

@@ -35,13 +35,29 @@ interface TutorialCardProps {
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case "Beginner":
+    case "初级":
       return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
     case "Intermediate":
+    case "中级":
       return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400"
     case "Advanced":
+    case "高级":
       return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
     default:
       return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+  }
+}
+
+const getDifficultyText = (difficulty: string) => {
+  switch (difficulty) {
+    case "Beginner":
+      return "初级"
+    case "Intermediate":
+      return "中级"
+    case "Advanced":
+      return "高级"
+    default:
+      return difficulty
   }
 }
 
@@ -57,7 +73,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
               {tutorial.category}
             </Badge>
             <Badge className={getDifficultyColor(tutorial.difficulty)}>
-              {tutorial.difficulty}
+              {getDifficultyText(tutorial.difficulty)}
             </Badge>
           </div>
           <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">
@@ -108,7 +124,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                     <div className="flex items-center space-x-2 mb-2">
                       <Badge variant="outline">{tutorial.category}</Badge>
                       <Badge className={getDifficultyColor(tutorial.difficulty)}>
-                        {tutorial.difficulty}
+                        {getDifficultyText(tutorial.difficulty)}
                       </Badge>
                     </div>
                     <DialogTitle className="text-2xl mb-2">{tutorial.title}</DialogTitle>
@@ -150,7 +166,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                 
                 <div className="mt-8 pt-6 border-t">
                   <div className="flex flex-wrap gap-2">
-                    <span className="text-sm font-medium text-muted-foreground mr-2">Tags:</span>
+                    <span className="text-sm font-medium text-muted-foreground mr-2">标签:</span>
                     {tutorial.tags.map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">
                         {tag}

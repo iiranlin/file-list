@@ -16,10 +16,10 @@ export default async function AudioPage() {
             <Music className="h-8 w-8 text-blue-500" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold mb-4">Audio Collection</h1>
+        <h1 className="text-4xl font-bold mb-4">音频收藏</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Discover and listen to my curated collection of audio files. Each track features 
-          built-in player controls and detailed information.
+          探索并聆听我精心收藏的音频作品。每首音频都配备了
+          内置播放器控件和详细信息展示。
         </p>
       </div>
 
@@ -27,19 +27,19 @@ export default async function AudioPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">{audioFiles.length}</div>
-          <div className="text-sm text-muted-foreground">Total Tracks</div>
+          <div className="text-sm text-muted-foreground">音频总数</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">6</div>
-          <div className="text-sm text-muted-foreground">Genres</div>
+          <div className="text-sm text-muted-foreground">音乐风格</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">30:23</div>
-          <div className="text-sm text-muted-foreground">Total Duration</div>
+          <div className="text-sm text-muted-foreground">总时长</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
-          <div className="text-2xl font-bold text-primary">High Quality</div>
-          <div className="text-sm text-muted-foreground">Audio Format</div>
+          <div className="text-2xl font-bold text-primary">高品质</div>
+          <div className="text-sm text-muted-foreground">音频格式</div>
         </div>
       </div>
 

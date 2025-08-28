@@ -57,11 +57,11 @@ export default async function Home() {
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Welcome to My Showcase
+          欢迎来到我的数字收藏馆
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Explore my collection of audio, video, images, and tutorials.
-          A modern, clean interface designed to make content discovery enjoyable.
+          在这里，您可以探索我精心收藏的音频、视频、图片和教程。
+          现代简洁的界面设计，让内容发现变得更加愉悦。
         </p>
         <Button size="lg" asChild>
           <Link href="/audio">
@@ -110,23 +110,23 @@ export default async function Home() {
 
       {/* Features Section */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-8">Built with Modern Technologies</h2>
+        <h2 className="text-2xl font-bold mb-8">采用现代化技术构建</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-muted-foreground">
           <div className="p-4 rounded-lg bg-muted/50">
             <div className="font-semibold mb-1">Next.js 15</div>
-            <div>React Framework</div>
+            <div>React 框架</div>
           </div>
           <div className="p-4 rounded-lg bg-muted/50">
             <div className="font-semibold mb-1">shadcn/ui</div>
-            <div>UI Components</div>
+            <div>UI 组件库</div>
           </div>
           <div className="p-4 rounded-lg bg-muted/50">
             <div className="font-semibold mb-1">TailwindCSS</div>
-            <div>Styling</div>
+            <div>样式框架</div>
           </div>
           <div className="p-4 rounded-lg bg-muted/50">
             <div className="font-semibold mb-1">TypeScript</div>
-            <div>Type Safety</div>
+            <div>类型安全</div>
           </div>
         </div>
       </div>

@@ -16,10 +16,10 @@ export default async function VideoPage() {
             <Video className="h-8 w-8 text-red-500" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold mb-4">Video Gallery</h1>
+        <h1 className="text-4xl font-bold mb-4">视频画廊</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Watch my collection of videos with thumbnail previews and modal playback. 
-          Each video features detailed information and viewing statistics.
+          观赏我收藏的视频作品，支持缩略图预览和弹窗播放。
+          每个视频都包含详细信息和观看统计数据。
         </p>
       </div>
 
@@ -27,19 +27,19 @@ export default async function VideoPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">{videoFiles.length}</div>
-          <div className="text-sm text-muted-foreground">Total Videos</div>
+          <div className="text-sm text-muted-foreground">视频总数</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">6</div>
-          <div className="text-sm text-muted-foreground">Categories</div>
+          <div className="text-sm text-muted-foreground">视频分类</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">87:05</div>
-          <div className="text-sm text-muted-foreground">Total Duration</div>
+          <div className="text-sm text-muted-foreground">总时长</div>
         </div>
         <div className="text-center p-4 rounded-lg bg-muted/50">
           <div className="text-2xl font-bold text-primary">12.1k</div>
-          <div className="text-sm text-muted-foreground">Total Views</div>
+          <div className="text-sm text-muted-foreground">总观看量</div>
         </div>
       </div>
 

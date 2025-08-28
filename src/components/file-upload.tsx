@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { getAuthHeaders } from "@/lib/auth-headers"
 
 export type FileType = 'image' | 'video' | 'audio'
 
@@ -106,8 +107,15 @@ export function FileUpload({
       formData.append('file', selectedFile)
       formData.append('type', fileType)
 
+      // 获取认证头
+      const authHeaders = getAuthHeaders()
+
       const response = await fetch('/api/upload', {
         method: 'POST',
+        headers: {
+          // 注意：FormData 不需要设置 Content-Type，浏览器会自动设置
+          'Authorization': authHeaders.Authorization || '',
+        },
         body: formData,
       })
 
