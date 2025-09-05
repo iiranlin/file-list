@@ -1,17 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { Video, Clock, Eye } from "lucide-react";
+import { Video, Clock, Eye, Download } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { VideoPlayer } from "@/components/video-player";
+import { DownloadDialog } from "@/components/download-dialog";
 import { type VideoFile } from "@/lib/data-loader";
 import { generateQiniuThumbnail } from "@/lib/video-utils";
 
 export default function VideoPage() {
   const [videoFiles, setVideoFiles] = useState<VideoFile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<VideoFile | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -29,6 +33,12 @@ export default function VideoPage() {
 
     loadData();
   }, []);
+
+  // 处理下载按钮点击
+  const handleDownloadClick = (video: VideoFile) => {
+    setSelectedVideo(video);
+    setDownloadDialogOpen(true);
+  };
 
   // 生成有效的缩略图URL
   const getThumbnailUrl = (video: VideoFile) => {
@@ -159,7 +169,7 @@ export default function VideoPage() {
                   {video.description}
                 </p>
 
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-1">
                       <Eye className="h-4 w-4" />
@@ -174,11 +184,31 @@ export default function VideoPage() {
                     {new Date(video.uploadDate).toLocaleDateString()}
                   </span>
                 </div>
+
+                {/* 下载按钮 */}
+                <Button
+                  onClick={() => handleDownloadClick(video)}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  下载视频
+                </Button>
               </CardContent>
             </Card>
           )
         })}
       </div>
+
+      {/* 下载对话框 */}
+      {selectedVideo && (
+        <DownloadDialog
+          open={downloadDialogOpen}
+          onOpenChange={setDownloadDialogOpen}
+          title={selectedVideo.title}
+          downloadUrl={selectedVideo.src}
+          type="video"
+        />
+      )}
     </div>
   );
 }

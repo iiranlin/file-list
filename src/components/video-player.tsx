@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Play, X, Maximize } from "lucide-react"
+import { Play, X, Maximize, Download } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { generateQiniuThumbnail } from "@/lib/video-utils"
+import { DownloadDialog } from "@/components/download-dialog"
 
 interface Video {
   id: number
@@ -37,6 +38,7 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
   const [isLoading, setIsLoading] = React.useState(false)
   const [loadError, setLoadError] = React.useState<string | null>(null)
   const [thumbnailError, setThumbnailError] = React.useState(false)
+  const [isDownloadDialogOpen, setIsDownloadDialogOpen] = React.useState(false)
 
   // 生成有效的缩略图URL
   const getThumbnailUrl = () => {
@@ -341,17 +343,28 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
               </div>
             )}
 
-            {/* 全屏按钮 - 只在视频加载后显示 */}
-            {isLoaded && (
+            {/* 下载按钮 - 始终显示 */}
+            <div className="absolute top-2 right-2 flex gap-2 z-10">
               <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleFullscreen}
-                className="absolute top-2 right-2 h-8 w-8 bg-black/50 hover:bg-black/70 text-white z-10"
+                onClick={() => setIsDownloadDialogOpen(true)}
+                className="bg-black/50 hover:bg-black/70 text-white text-xs px-3 py-1 h-auto rounded-full backdrop-blur-sm border border-white/20"
               >
-                <Maximize className="h-4 w-4" />
+                <Download className="h-3 w-3 mr-1" />
+                下载
               </Button>
-            )}
+              {/* 全屏按钮 - 只在视频加载后显示 */}
+              {isLoaded && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleFullscreen}
+                  className="h-8 w-8 bg-black/50 hover:bg-black/70 text-white"
+                  title="全屏播放"
+                >
+                  <Maximize className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
           </div>
           
           {/* Video Info */}
@@ -369,6 +382,15 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
           </div>
         </div>
       </DialogContent>
+
+      {/* 下载对话框 */}
+      <DownloadDialog
+        open={isDownloadDialogOpen}
+        onOpenChange={setIsDownloadDialogOpen}
+        title={video.title}
+        downloadUrl={video.src}
+        type="video"
+      />
     </Dialog>
   )
 }

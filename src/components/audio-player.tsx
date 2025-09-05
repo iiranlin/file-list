@@ -1,10 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Play, Pause, Volume2, VolumeX } from "lucide-react"
+import { Play, Pause, Volume2, VolumeX, Download } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { DownloadDialog } from "@/components/download-dialog"
 
 interface AudioPlayerProps {
   src: string
@@ -21,6 +22,7 @@ export function AudioPlayer({ src, title, artist }: AudioPlayerProps) {
   const [isMuted, setIsMuted] = React.useState(false)
   const [isLoaded, setIsLoaded] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isDownloadDialogOpen, setIsDownloadDialogOpen] = React.useState(false)
 
   // 键盘快捷键支持
   React.useEffect(() => {
@@ -175,7 +177,7 @@ export function AudioPlayer({ src, title, artist }: AudioPlayerProps) {
       
       <div className="space-y-3">
         {/* Audio Info */}
-        <div className="text-center space-y-1">
+        <div className="text-center space-y-1 relative">
           <h4 className="font-medium text-sm truncate flex items-center justify-center gap-2">
             {isPlaying && (
               <div className="flex items-center gap-1">
@@ -187,6 +189,15 @@ export function AudioPlayer({ src, title, artist }: AudioPlayerProps) {
             {title}
           </h4>
           <p className="text-xs text-muted-foreground truncate">{artist}</p>
+
+          {/* 下载按钮 */}
+          <Button
+            onClick={() => setIsDownloadDialogOpen(true)}
+            className="absolute top-0 right-0 bg-primary/10 hover:bg-primary/20 text-primary text-xs px-2 py-1 h-auto rounded-full border border-primary/20"
+          >
+            <Download className="h-3 w-3 mr-1" />
+            下载
+          </Button>
         </div>
 
         {/* Play/Pause Button */}
@@ -279,6 +290,15 @@ export function AudioPlayer({ src, title, artist }: AudioPlayerProps) {
           快捷键: 空格键播放/暂停 • ↑↓调节音量 • M静音
         </div>
       </div>
+
+      {/* 下载对话框 */}
+      <DownloadDialog
+        open={isDownloadDialogOpen}
+        onOpenChange={setIsDownloadDialogOpen}
+        title={title}
+        downloadUrl={src}
+        type="audio"
+      />
     </Card>
   )
 }

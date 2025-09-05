@@ -1,12 +1,56 @@
-import { Music, Clock, Play } from "lucide-react";
+"use client"
+
+import { useState, useEffect } from "react";
+import { Music, Clock, Play, Download } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/audio-player";
-import { loadAudioData, type AudioFile } from "@/lib/data-loader";
+import { DownloadDialog } from "@/components/download-dialog";
+import { type AudioFile } from "@/lib/data-loader";
 
-export default async function AudioPage() {
-  const audioFiles: AudioFile[] = await loadAudioData();
+export default function AudioPage() {
+  const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+  const [selectedAudio, setSelectedAudio] = useState<AudioFile | null>(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch('/api/admin/audio');
+        const data = await response.json();
+        setAudioFiles(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Failed to load audio data:', error);
+        setAudioFiles([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // 处理下载按钮点击
+  const handleDownloadClick = (audio: AudioFile) => {
+    setSelectedAudio(audio);
+    setDownloadDialogOpen(true);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p>加载中...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="container mx-auto px-4 py-12">
       {/* Header */}
@@ -74,15 +118,37 @@ export default async function AudioPage() {
                 </div>
               </div>
 
-              <AudioPlayer 
+              <AudioPlayer
                 src={audio.src}
                 title={audio.title}
                 artist={audio.artist}
               />
+
+              {/* 下载按钮 */}
+              {/* <div className="mt-4">
+                <Button
+                  onClick={() => handleDownloadClick(audio)}
+                  className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  下载音频
+                </Button>
+              </div> */}
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {/* 下载对话框 */}
+      {selectedAudio && (
+        <DownloadDialog
+          open={downloadDialogOpen}
+          onOpenChange={setDownloadDialogOpen}
+          title={selectedAudio.title}
+          downloadUrl={selectedAudio.src}
+          type="audio"
+        />
+      )}
     </div>
   );
 }
