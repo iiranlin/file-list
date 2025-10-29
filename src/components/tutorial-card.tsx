@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Clock, User, Calendar, BookOpen, X } from "lucide-react"
+import * as React from "react";
+import { Clock, User, Calendar, BookOpen, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -13,56 +19,56 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 interface Tutorial {
-  id: number
-  title: string
-  excerpt: string
-  content: string
-  category: string
-  difficulty: "Beginner" | "Intermediate" | "Advanced"
-  readTime: string
-  author: string
-  publishDate: string
-  tags: string[]
+  id: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  difficulty: "Beginner" | "Intermediate" | "Advanced";
+  readTime: string;
+  author: string;
+  publishDate: string;
+  tags: string[];
 }
 
 interface TutorialCardProps {
-  tutorial: Tutorial
+  tutorial: Tutorial;
 }
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case "Beginner":
     case "初级":
-      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
+      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
     case "Intermediate":
     case "中级":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400"
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
     case "Advanced":
     case "高级":
-      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400"
+      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
     default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400"
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
   }
-}
+};
 
 const getDifficultyText = (difficulty: string) => {
   switch (difficulty) {
     case "Beginner":
-      return "初级"
+      return "初级";
     case "Intermediate":
-      return "中级"
+      return "中级";
     case "Advanced":
-      return "高级"
+      return "高级";
     default:
-      return difficulty
+      return difficulty;
   }
-}
+};
 
 export function TutorialCard({ tutorial }: TutorialCardProps) {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <>
@@ -83,7 +89,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
             {tutorial.excerpt}
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
             <div className="flex items-center space-x-4">
@@ -114,7 +120,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
             <DialogTrigger asChild>
               <Button className="w-full">
                 <BookOpen className="h-4 w-4 mr-2" />
-                Read Tutorial
+                阅读教程
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-hidden">
@@ -123,11 +129,15 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
                       <Badge variant="outline">{tutorial.category}</Badge>
-                      <Badge className={getDifficultyColor(tutorial.difficulty)}>
+                      <Badge
+                        className={getDifficultyColor(tutorial.difficulty)}
+                      >
                         {getDifficultyText(tutorial.difficulty)}
                       </Badge>
                     </div>
-                    <DialogTitle className="text-2xl mb-2">{tutorial.title}</DialogTitle>
+                    <DialogTitle className="text-2xl mb-2">
+                      {tutorial.title}
+                    </DialogTitle>
                     <DialogDescription className="text-base">
                       <div className="flex items-center space-x-4 text-muted-foreground">
                         <div className="flex items-center space-x-1">
@@ -140,22 +150,18 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                         </div>
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4" />
-                          <span>{new Date(tutorial.publishDate).toLocaleDateString()}</span>
+                          <span>
+                            {new Date(
+                              tutorial.publishDate
+                            ).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
                     </DialogDescription>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsOpen(false)}
-                    className="h-8 w-8"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
                 </div>
               </DialogHeader>
-              
+
               <div className="overflow-y-auto max-h-[calc(90vh-200px)] pr-6">
                 <div className="prose prose-gray dark:prose-invert max-w-none">
                   {/* In a real app, you would use a markdown parser like react-markdown */}
@@ -163,10 +169,12 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                     {tutorial.content}
                   </div>
                 </div>
-                
+
                 <div className="mt-8 pt-6 border-t">
                   <div className="flex flex-wrap gap-2">
-                    <span className="text-sm font-medium text-muted-foreground mr-2">标签:</span>
+                    <span className="text-sm font-medium text-muted-foreground mr-2">
+                      标签:
+                    </span>
                     {tutorial.tags.map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">
                         {tag}
@@ -180,5 +188,5 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
         </CardContent>
       </Card>
     </>
-  )
+  );
 }
