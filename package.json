@@ -22,9 +22,11 @@
     "permissions:test": "tsx scripts/test-permissions.ts",
     "permissions:verify": "tsx scripts/verify-permissions.ts",
     "api:test": "tsx scripts/test-api-permissions.ts",
-    "qiniu:test": "tsx scripts/test-qiniu.ts"
+    "qiniu:test": "tsx scripts/test-qiniu.ts",
+    "oss:test": "tsx scripts/test-oss.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.946.0",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",

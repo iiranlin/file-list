@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { VideoPlayer } from "@/components/video-player";
 import { DownloadDialog } from "@/components/download-dialog";
 import { type VideoFile } from "@/lib/data-loader";
-import { generateQiniuThumbnail } from "@/lib/video-utils";
+import { generateThumbnailUrl } from "@/lib/video-utils";
 
 export default function VideoPage() {
   const [videoFiles, setVideoFiles] = useState<VideoFile[]>([]);
@@ -42,23 +42,15 @@ export default function VideoPage() {
 
   // 生成有效的缩略图URL
   const getThumbnailUrl = (video: VideoFile) => {
-    // 检查是否是七牛云视频，如果是则生成缩略图
-    if (video.src.includes('qiniu') || video.src.includes('clouddn')) {
-      return generateQiniuThumbnail(video.src, { offset: 10 }) // 使用第10秒作为缩略图
-    }
-
     // 如果已有缩略图且不是占位符，直接使用
     if (video.thumbnail && !video.thumbnail.includes('video-thumb-')) {
       return video.thumbnail
     }
 
-    // 对于其他CDN或URL，尝试生成缩略图（如果URL看起来像视频文件）
-    if (video.src.match(/\.(mp4|webm|ogg|mov|avi)(\?|$)/i)) {
-      // 如果是视频文件但不是七牛云，尝试通用的缩略图生成
-      return generateQiniuThumbnail(video.src, { offset: 10 })
-    }
+    // 尝试生成动态缩略图 (仅支持Qiniu)
+    const generated = generateThumbnailUrl(video.src, { offset: 10 })
+    if (generated) return generated
 
-    // 否则返回null，表示没有有效的缩略图
     return null
   }
 

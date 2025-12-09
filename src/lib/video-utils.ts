@@ -52,10 +52,9 @@ export function validateVideoUrl(url: string): VideoValidationResult {
     result.suggestions.push('确保视频文件是MP4、WebM或其他支持的格式')
   }
 
-  // 检查是否是七牛云域名
-  if (urlObj.hostname.includes('qiniu') || urlObj.hostname.includes('clouddn')) {
-    result.suggestions.push('检查七牛云CORS配置是否正确')
-    result.suggestions.push('确认空间权限设置允许公开访问')
+  // 检查是否是七牛云或通过R2的域名
+  if (urlObj.hostname.includes('qiniu') || urlObj.hostname.includes('clouddn') || urlObj.hostname.includes('r2.cloudflarestorage.com')) {
+    // 允许通过
   }
 
   // 检查是否有查询参数（可能是处理参数）
@@ -67,33 +66,55 @@ export function validateVideoUrl(url: string): VideoValidationResult {
 }
 
 /**
- * 生成七牛云视频缩略图URL
+ * 生成视频缩略图URL
+ * 注意：Cloudflare R2 不支持动态视频截帧，此函数仅对七牛云URL有效，或者返回原视频URL作为兜底
  */
-export function generateQiniuThumbnail(videoUrl: string, options: {
+export function generateThumbnailUrl(videoUrl: string, options: {
   offset?: number // 截取时间点（秒）
   width?: number
   height?: number
   format?: 'jpg' | 'png'
-} = {}): string {
+} = {}): string | null {
   const { offset = 1, width, height, format = 'jpg' } = options
 
   try {
     const url = new URL(videoUrl)
-    let params = `vframe/${format}/offset/${offset}`
     
-    if (width && height) {
-      params += `/w/${width}/h/${height}`
-    } else if (width) {
-      params += `/w/${width}`
-    } else if (height) {
-      params += `/h/${height}`
-    }
+    // 只有七牛云和特定的CDN支持动态截帧
+    if (url.hostname.includes('qiniu') || url.hostname.includes('clouddn')) {
+      let params = `vframe/${format}/offset/${offset}`
+      
+      if (width && height) {
+        params += `/w/${width}/h/${height}`
+      } else if (width) {
+        params += `/w/${width}`
+      } else if (height) {
+        params += `/h/${height}`
+      }
 
-    url.search = params
-    return url.toString()
+      // 如果已有查询参数，附加到后面；否则作为新的查询参数
+      if (url.search) {
+        url.search += `&${params}` 
+      } else {
+        url.search = params
+      }
+      return url.toString()
+    }
+    
+    // 对于不支持动态截帧的存储（如R2），返回null，由前端处理（显示占位符或尝试加载视频首帧）
+    return null
+    
   } catch {
-    return videoUrl + `?vframe/${format}/offset/${offset}`
+    return null
   }
+}
+
+/**
+ * @deprecated Use generateThumbnailUrl instead
+ */
+export function generateQiniuThumbnail(videoUrl: string, options: any = {}): string {
+   const result = generateThumbnailUrl(videoUrl, options);
+   return result || videoUrl; // 保持向后兼容，如果无法生成缩略图则返回原URL
 }
 
 /**

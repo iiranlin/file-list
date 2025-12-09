@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { generateQiniuThumbnail } from "@/lib/video-utils"
+import { generateThumbnailUrl } from "@/lib/video-utils"
 import { DownloadDialog } from "@/components/download-dialog"
 
 interface Video {
@@ -42,23 +42,18 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
 
   // 生成有效的缩略图URL
   const getThumbnailUrl = () => {
-    // 检查是否是七牛云视频，如果是则生成缩略图
-    if (video.src.includes('qiniu') || video.src.includes('clouddn')) {
-      return generateQiniuThumbnail(video.src, { offset: 10 }) // 使用第10秒作为缩略图
-    }
-
     // 如果已有缩略图且不是占位符，直接使用
     if (video.thumbnail && !video.thumbnail.includes('video-thumb-')) {
       return video.thumbnail
     }
 
-    // 对于其他CDN或URL，尝试生成缩略图（如果URL看起来像视频文件）
-    if (video.src.match(/\.(mp4|webm|ogg|mov|avi)(\?|$)/i)) {
-      // 如果是视频文件但不是七牛云，尝试通用的缩略图生成
-      return generateQiniuThumbnail(video.src, { offset: 10 })
-    }
+    // 尝试生成动态缩略图 (仅支持Qiniu)
+    const generated = generateThumbnailUrl(video.src, { offset: 10 })
+    if (generated) return generated
 
-    // 否则返回null，表示没有有效的缩略图
+    // 对于R2或其他不支持动态截帧的存储，返回null
+    // 这里可以添加逻辑去获取静态缩略图文件（如果在上传时生成了的话）
+    // 目前简单返回null，前端将回退到使用video poster或加载视频首帧
     return null
   }
 
