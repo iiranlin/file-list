@@ -1,5 +1,7 @@
-import { promises as fs } from 'fs'
-import path from 'path'
+import audioJson from '@/data/audio.json' assert { type: 'json' }
+import videoJson from '@/data/videos.json' assert { type: 'json' }
+import imageJson from '@/data/images.json' assert { type: 'json' }
+import tutorialJson from '@/data/tutorials.json' assert { type: 'json' }
 import { audioService, videoService, imageService, tutorialService } from './db/services'
 
 // 类型定义
@@ -65,10 +67,8 @@ export async function loadAudioData(): Promise<AudioFile[]> {
     }))
   } catch (error) {
     console.warn('Failed to load from database, falling back to JSON:', error)
-    // 如果数据库失败，回退到JSON文件
-    const filePath = path.join(process.cwd(), 'src/data/audio.json')
-    const fileContents = await fs.readFile(filePath, 'utf8')
-    return JSON.parse(fileContents)
+    // 如果数据库失败，回退到JSON数据（打包时随代码一起发布）
+    return audioJson as AudioFile[]
   }
 }
 
@@ -89,10 +89,8 @@ export async function loadVideoData(): Promise<VideoFile[]> {
     }))
   } catch (error) {
     console.warn('Failed to load from database, falling back to JSON:', error)
-    // 如果数据库失败，回退到JSON文件
-    const filePath = path.join(process.cwd(), 'src/data/videos.json')
-    const fileContents = await fs.readFile(filePath, 'utf8')
-    return JSON.parse(fileContents)
+    // 如果数据库失败，回退到JSON数据（打包时随代码一起发布）
+    return videoJson as VideoFile[]
   }
 }
 
@@ -112,10 +110,12 @@ export async function loadImageData(): Promise<ImageFile[]> {
     }))
   } catch (error) {
     console.warn('Failed to load from database, falling back to JSON:', error)
-    // 如果数据库失败，回退到JSON文件
-    const filePath = path.join(process.cwd(), 'src/data/images.json')
-    const fileContents = await fs.readFile(filePath, 'utf8')
-    return JSON.parse(fileContents)
+    // 如果数据库失败，回退到JSON数据（打包时随代码一起发布）
+    return (imageJson as any as ImageFile[]).map(item => ({
+      ...item,
+      // JSON 中已是数组，保持一致性
+      tags: Array.isArray(item.tags) ? item.tags : [],
+    }))
   }
 }
 
@@ -137,9 +137,10 @@ export async function loadTutorialData(): Promise<Tutorial[]> {
     }))
   } catch (error) {
     console.warn('Failed to load from database, falling back to JSON:', error)
-    // 如果数据库失败，回退到JSON文件
-    const filePath = path.join(process.cwd(), 'src/data/tutorials.json')
-    const fileContents = await fs.readFile(filePath, 'utf8')
-    return JSON.parse(fileContents)
+    // 如果数据库失败，回退到JSON数据（打包时随代码一起发布）
+    return (tutorialJson as any as Tutorial[]).map(item => ({
+      ...item,
+      tags: Array.isArray(item.tags) ? item.tags : [],
+    }))
   }
 }
