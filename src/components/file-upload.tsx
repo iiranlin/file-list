@@ -14,7 +14,7 @@ export type FileType = 'image' | 'video' | 'audio'
 
 interface FileUploadProps {
   fileType: FileType
-  onUploadSuccess: (url: string, fileName: string) => void
+  onUploadSuccess: (url: string, fileName: string, metadata?: { dimensions?: string }) => void
   onUploadError?: (error: string) => void
   accept?: string
   maxSize?: number // MB
@@ -44,7 +44,9 @@ export function FileUpload({
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [metadata, setMetadata] = useState<{ dimensions?: string }>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const currentFileRef = useRef<File | null>(null)
 
   // 默认接受的文件类型
   const defaultAccept = {
@@ -62,8 +64,18 @@ export function FileUpload({
 
   // 处理文件选择
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // 清理旧的预览URL以释放内存
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+    }
+
     const file = event.target.files?.[0]
-    if (!file) return
+    if (!file) {
+      setSelectedFile(null)
+      setPreviewUrl(null)
+      currentFileRef.current = null
+      return
+    }
 
     // 验证文件大小
     if (file.size > maxSize * 1024 * 1024) {
@@ -77,6 +89,7 @@ export function FileUpload({
     }
 
     setSelectedFile(file)
+    currentFileRef.current = file
     setUploadState({
       uploading: false,
       progress: 0,
@@ -88,6 +101,18 @@ export function FileUpload({
     if (fileType === 'image' && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file)
       setPreviewUrl(url)
+
+      // 获取图片尺寸
+      const img = new Image()
+      img.onload = () => {
+        // 竞态检查：确保只在还是当前选中的文件时更新元数据
+        if (currentFileRef.current === file) {
+          setMetadata({ dimensions: `${img.width}x${img.height}` })
+        }
+      }
+      img.src = url
+    } else {
+      setMetadata({})
     }
   }
 
@@ -128,7 +153,7 @@ export function FileUpload({
           error: null,
           success: true,
         })
-        onUploadSuccess(result.url, selectedFile.name)
+        onUploadSuccess(result.url, selectedFile.name, metadata)
       } else {
         throw new Error(result.error || '上传失败')
       }
@@ -146,8 +171,13 @@ export function FileUpload({
 
   // 清除选择
   const handleClear = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+    }
     setSelectedFile(null)
     setPreviewUrl(null)
+    setMetadata({})
+    currentFileRef.current = null
     setUploadState({
       uploading: false,
       progress: 0,

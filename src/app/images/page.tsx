@@ -45,22 +45,6 @@ export default async function ImagesPage() {
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="flex flex-wrap gap-2 justify-center mb-8">
-        <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground">
-          全部
-        </Badge>
-        {categories.map((category) => (
-          <Badge 
-            key={category} 
-            variant="outline" 
-            className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-          >
-            {category}
-          </Badge>
-        ))}
-      </div>
-
       {/* Image Gallery */}
       <ImageGallery images={imageFiles} />
     </div>

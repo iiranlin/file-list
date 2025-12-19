@@ -174,10 +174,15 @@ export function ImageFormDialog({ open, onOpenChange, editingItem, onSave }: Ima
               <TabsContent value="upload" className="space-y-2">
                 <FileUpload
                   fileType="image"
-                  onUploadSuccess={(url, fileName) => {
+                  onUploadSuccess={(url, fileName, metadata) => {
                     handleChange('src', url)
+                    // 自动填充标题（如果为空）
                     if (!formData.title) {
                       handleChange('title', fileName.replace(/\.[^/.]+$/, ''))
+                    }
+                    // 自动填充尺寸
+                    if (metadata?.dimensions) {
+                      handleChange('dimensions', metadata.dimensions)
                     }
                   }}
                   onUploadError={(error) => {
