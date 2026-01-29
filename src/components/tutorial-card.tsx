@@ -4,6 +4,7 @@ import * as React from "react";
 import { Clock, User, Calendar, BookOpen, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { MdViewer } from "@/components/md-viewer";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -123,7 +124,7 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                 阅读教程
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden">
               <DialogHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -163,11 +164,9 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
               </DialogHeader>
 
               <div className="overflow-y-auto max-h-[calc(90vh-200px)] pr-6">
-                <div className="prose prose-gray dark:prose-invert max-w-none">
-                  {/* In a real app, you would use a markdown parser like react-markdown */}
-                  <div className="whitespace-pre-wrap leading-relaxed">
-                    {tutorial.content}
-                  </div>
+                {/* 使用 relative 定位确保 rough-annotation 标注跟随内容滚动 */}
+                <div className="relative">
+                  <MdViewer value={tutorial.content} />
                 </div>
 
                 <div className="mt-8 pt-6 border-t">

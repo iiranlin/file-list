@@ -266,3 +266,159 @@
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
+
+/* ByteMD Markdown 渲染器样式 */
+.md-viewer {
+  width: 100%;
+  position: relative;
+}
+
+/* rough-notation 标注样式修复 - 确保跟随内容滚动 */
+.md-viewer .rough-annotation {
+  position: absolute !important;
+}
+
+.md-viewer .markdown-body {
+  background-color: transparent;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.md-viewer .markdown-body pre {
+  background-color: var(--muted);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.md-viewer .markdown-body code {
+  background-color: var(--muted);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.9em;
+}
+
+.md-viewer .markdown-body pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.md-viewer .markdown-body img {
+  max-width: 100%;
+  border-radius: 8px;
+  cursor: zoom-in;
+}
+
+.md-viewer .markdown-body blockquote {
+  border-left: 4px solid var(--primary);
+  background-color: var(--muted);
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.md-viewer .markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.md-viewer .markdown-body th,
+.md-viewer .markdown-body td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+}
+
+.md-viewer .markdown-body th {
+  background-color: var(--muted);
+}
+
+/* 暗色模式适配 */
+.dark .md-viewer .markdown-body {
+  color: var(--foreground);
+}
+
+.dark .md-viewer .markdown-body h1,
+.dark .md-viewer .markdown-body h2,
+.dark .md-viewer .markdown-body h3,
+.dark .md-viewer .markdown-body h4,
+.dark .md-viewer .markdown-body h5,
+.dark .md-viewer .markdown-body h6 {
+  color: var(--foreground);
+  border-bottom-color: var(--border);
+}
+
+.dark .md-viewer .markdown-body a {
+  color: var(--primary);
+}
+
+/* Medium Zoom 图片缩放层级 */
+.medium-zoom-overlay {
+  z-index: 9998 !important;
+}
+
+.medium-zoom-image--opened {
+  z-index: 9999 !important;
+}
+
+/* ByteMD 编辑器样式 */
+.md-editor-wrapper {
+  width: 100%;
+}
+
+.md-editor-wrapper .bytemd {
+  height: 400px;
+  border: none;
+}
+
+.md-editor-wrapper .bytemd-toolbar {
+  background-color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.md-editor-wrapper .bytemd-toolbar-icon:hover {
+  background-color: var(--accent);
+}
+
+.md-editor-wrapper .bytemd-editor {
+  background-color: var(--background);
+}
+
+.md-editor-wrapper .bytemd-preview {
+  background-color: var(--background);
+}
+
+.md-editor-wrapper .CodeMirror {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* 暗色模式编辑器适配 */
+.dark .md-editor-wrapper .bytemd-toolbar {
+  background-color: var(--muted);
+}
+
+.dark .md-editor-wrapper .CodeMirror {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.dark .md-editor-wrapper .CodeMirror-cursor {
+  border-left-color: var(--foreground);
+}
+
+.dark .md-editor-wrapper .CodeMirror-gutters {
+  background-color: var(--muted);
+  border-right-color: var(--border);
+}
+
+/* 编辑器预览区域 rough-annotation 修复 */
+.md-editor-wrapper .bytemd-preview {
+  position: relative;
+}
+
+.md-editor-wrapper .bytemd-preview .markdown-body {
+  position: relative;
+}
+
+.md-editor-wrapper .rough-annotation {
+  position: absolute !important;
+}

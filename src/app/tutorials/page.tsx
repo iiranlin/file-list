@@ -4,6 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { TutorialCard } from "@/components/tutorial-card";
 import { loadTutorialData, type Tutorial } from "@/lib/data-loader";
 
+// 强制动态渲染，确保每次访问都获取最新数据
+export const dynamic = "force-dynamic";
+
 export default async function TutorialsPage() {
   const tutorials: Tutorial[] = await loadTutorialData();
 

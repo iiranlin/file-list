@@ -45,7 +45,8 @@ export function generateFileKey(originalName: string, fileType: FileType): strin
   const timePrefix = `${year}${month}${day}${hour}${minute}`
 
   const ext = originalName.split('.').pop()?.toLowerCase() || ''
-  const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '')
+  // 将空格和特殊字符替换为下划线，避免 URL 问题
+  const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '').replace(/[\s]+/g, '_')
 
   const typePrefix = {
     [FileType.IMAGE]: 'images',

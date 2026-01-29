@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { MdEditor } from "@/components/md-editor"
 import type { Tutorial } from "@/lib/data-loader"
 
 interface TutorialFormDialogProps {
@@ -124,7 +125,7 @@ export function TutorialFormDialog({ open, onOpenChange, editingItem, onSave }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {editingItem ? '编辑教程' : '添加教程'}
@@ -160,16 +161,15 @@ export function TutorialFormDialog({ open, onOpenChange, editingItem, onSave }: 
 
           <div className="space-y-2">
             <Label htmlFor="content">内容 *</Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) => handleChange('content', e.target.value)}
-              placeholder="请输入教程完整内容（支持Markdown格式）"
-              rows={8}
-              required
-            />
+            <div className="border rounded-md overflow-hidden">
+              <MdEditor
+                value={formData.content}
+                onChange={(value) => handleChange('content', value)}
+                placeholder="请输入教程完整内容（支持Markdown格式）"
+              />
+            </div>
             <p className="text-xs text-muted-foreground">
-              支持Markdown格式，换行请使用 \n
+              支持Markdown格式，可直接粘贴或拖拽图片上传
             </p>
           </div>
 
