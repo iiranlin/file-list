@@ -1,13 +1,10 @@
 import Link from "next/link";
-import { Music, Video, Image as ImageIcon, BookOpen, ArrowRight } from "lucide-react";
+import { Music, Video, Image as ImageIcon, BookOpen, ArrowUpRight, Terminal, Code2, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { loadAudioData, loadVideoData, loadImageData, loadTutorialData } from "@/lib/data-loader";
-import { LoadingButton, LoadingLink } from "@/components/loading-link";
 
 export default async function Home() {
-  // 从JSON文件加载数据来获取实际数量
   const [audioFiles, videoFiles, imageFiles, tutorials] = await Promise.all([
     loadAudioData(),
     loadVideoData(),
@@ -17,122 +14,217 @@ export default async function Home() {
 
   const contentTypes = [
     {
-      title: "音频收藏",
-      description: "聆听精心挑选的音频作品，享受内置播放器的便捷体验",
+      title: "音频",
+      subtitle: "Audio",
+      description: "精选音频收藏，支持在线播放与管理",
       icon: Music,
       href: "/audio",
-      color: "text-blue-500",
-      bgColor: "bg-blue-50 dark:bg-blue-950/20",
-      count: `${audioFiles.length} 首音频`,
+      count: audioFiles.length,
+      gradient: "from-violet-500/10 to-purple-500/10",
+      iconColor: "text-violet-500",
+      borderColor: "hover:border-violet-500/30",
     },
     {
-      title: "视频画廊",
-      description: "观赏精彩视频内容，支持缩略图预览和弹窗播放",
+      title: "视频",
+      subtitle: "Video",
+      description: "视频库，支持预览与流媒体播放",
       icon: Video,
       href: "/video",
-      color: "text-red-500",
-      bgColor: "bg-red-50 dark:bg-red-950/20",
-      count: `${videoFiles.length} 个视频`,
+      count: videoFiles.length,
+      gradient: "from-blue-500/10 to-cyan-500/10",
+      iconColor: "text-blue-500",
+      borderColor: "hover:border-blue-500/30",
     },
     {
-      title: "图片展览",
-      description: "浏览美丽的图片作品，配备灯箱预览功能",
+      title: "图片",
+      subtitle: "Images",
+      description: "图片画廊，记录视觉灵感与创意",
       icon: ImageIcon,
       href: "/images",
-      color: "text-green-500",
-      bgColor: "bg-green-50 dark:bg-green-950/20",
-      count: `${imageFiles.length} 张图片`,
+      count: imageFiles.length,
+      gradient: "from-emerald-500/10 to-teal-500/10",
+      iconColor: "text-emerald-500",
+      borderColor: "hover:border-emerald-500/30",
     },
     {
-      title: "教程文档",
-      description: "阅读详细的教程和文档，支持内容展开和收起",
+      title: "教程",
+      subtitle: "Tutorials",
+      description: "技术文档、指南与学习资源",
       icon: BookOpen,
       href: "/tutorials",
-      color: "text-purple-500",
-      bgColor: "bg-purple-50 dark:bg-purple-950/20",
-      count: `${tutorials.length} 篇教程`,
+      count: tutorials.length,
+      gradient: "from-amber-500/10 to-orange-500/10",
+      iconColor: "text-amber-500",
+      borderColor: "hover:border-amber-500/30",
     },
   ];
+
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          欢迎来到我的数字收藏馆
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          在这里，您可以探索我精心收藏的音频、视频、图片和教程。
-          现代简洁的界面设计，让内容发现变得更加愉悦。
-        </p>
-        <LoadingButton
-          href="/audio"
-          className="px-8 py-3 text-lg"
-          variant="default"
-        >
-          开始探索
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </LoadingButton>
-      </div>
+      <section className="relative overflow-hidden border-b bg-gradient-to-b from-muted/30 to-background">
+        {/* Decorative background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl" />
+        </div>
 
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-        {contentTypes.map((type) => {
-          const Icon = type.icon;
-          return (
-            <Card
-              key={type.title}
-              className="group hover:shadow-lg transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-            >
-              <LoadingLink href={type.href}>
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className={`p-3 rounded-lg ${type.bgColor}`}>
-                      <Icon className={`h-6 w-6 ${type.color}`} />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="group-hover:text-primary transition-colors">
-                        {type.title}
-                      </CardTitle>
-                      <CardDescription className="text-sm text-muted-foreground">
-                        {type.count}
-                      </CardDescription>
-                    </div>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">
-                    {type.description}
-                  </p>
-                </CardContent>
-              </LoadingLink>
-            </Card>
-          );
-        })}
-      </div>
+        <div className="container mx-auto px-4 py-20 md:py-28 max-w-6xl">
+          <div className="flex flex-col items-center text-center gap-6">
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-sm font-medium text-primary">
+              <Terminal className="h-4 w-4" />
+              <span>个人数字资源库</span>
+            </div>
 
-      {/* Features Section */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-8">采用现代化技术构建</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-muted-foreground">
-          <div className="p-4 rounded-lg bg-muted/50">
-            <div className="font-semibold mb-1">Next.js 15</div>
-            <div>React 框架</div>
-          </div>
-          <div className="p-4 rounded-lg bg-muted/50">
-            <div className="font-semibold mb-1">shadcn/ui</div>
-            <div>UI 组件库</div>
-          </div>
-          <div className="p-4 rounded-lg bg-muted/50">
-            <div className="font-semibold mb-1">TailwindCSS</div>
-            <div>样式框架</div>
-          </div>
-          <div className="p-4 rounded-lg bg-muted/50">
-            <div className="font-semibold mb-1">TypeScript</div>
-            <div>类型安全</div>
+            {/* Title */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
+                数字资源管理中心
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+              一个专注于<span className="text-foreground font-medium">媒体资源</span>与<span className="text-foreground font-medium">知识管理</span>的个人平台，
+              <br className="hidden md:block" />
+              简洁、高效、无干扰地探索与组织数字内容。
+            </p>
+
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-4">
+              <Link href="/tutorials">
+                <Button size="lg" className="gap-2 px-6 shadow-lg shadow-primary/20">
+                  <BookOpen className="h-4 w-4" />
+                  浏览教程
+                </Button>
+              </Link>
+              <Link href="/audio">
+                <Button size="lg" variant="outline" className="gap-2 px-6">
+                  开始探索
+                  <ArrowUpRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* Stats */}
+            <div className="flex flex-wrap justify-center gap-8 mt-8 pt-8 border-t border-border/50">
+              {[
+                { label: "音频文件", count: audioFiles.length },
+                { label: "视频内容", count: videoFiles.length },
+                { label: "图片收藏", count: imageFiles.length },
+                { label: "技术文档", count: tutorials.length },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-2xl md:text-3xl font-bold text-foreground">{stat.count}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="container mx-auto px-4 py-16 md:py-24 max-w-6xl">
+        <div className="flex flex-col gap-12">
+          {/* Section Header */}
+          <div className="flex flex-col gap-3">
+            <div className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <Sparkles className="h-4 w-4" />
+              <span>内容分类</span>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold">
+              资源浏览
+            </h2>
+            <p className="text-muted-foreground max-w-lg">
+              探索不同类型的数字内容，所有资源均已分类整理，便于快速访问。
+            </p>
+          </div>
+
+          {/* Content Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {contentTypes.map((type) => {
+              const Icon = type.icon;
+              return (
+                <Link href={type.href} key={type.title} className="group block">
+                  <div
+                    className={`
+                      relative h-full p-6 md:p-8
+                      rounded-2xl border border-border/60
+                      bg-gradient-to-br ${type.gradient}
+                      backdrop-blur-sm
+                      transition-all duration-300 ease-out
+                      hover:shadow-xl hover:shadow-black/5
+                      ${type.borderColor}
+                      hover:-translate-y-1
+                    `}
+                  >
+                    {/* Icon */}
+                    <div className={`
+                      w-12 h-12 rounded-xl 
+                      bg-background/80 border border-border/50
+                      flex items-center justify-center
+                      mb-5 transition-transform duration-300
+                      group-hover:scale-110
+                    `}>
+                      <Icon className={`h-6 w-6 ${type.iconColor}`} />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-baseline gap-3">
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {type.title}
+                        </h3>
+                        <span className="text-xs font-mono text-muted-foreground/70 uppercase tracking-wider">
+                          {type.subtitle}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {type.description}
+                      </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/30">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-foreground">{type.count}</span>
+                        <span className="text-sm text-muted-foreground">个项目</span>
+                      </div>
+                      <ArrowUpRight className="h-5 w-5 text-muted-foreground/50 group-hover:text-primary transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="border-t bg-muted/20">
+        <div className="container mx-auto px-4 py-12 max-w-6xl">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Code2 className="h-4 w-4" />
+              <span>© {new Date().getFullYear()} 个人资源管理系统</span>
+            </div>
+            <div className="flex items-center gap-6">
+              {[
+                { name: "Next.js", color: "text-foreground" },
+                { name: "React", color: "text-blue-500" },
+                { name: "TypeScript", color: "text-blue-600" },
+                { name: "Tailwind", color: "text-cyan-500" },
+              ].map((tech) => (
+                <span key={tech.name} className={`font-medium ${tech.color}/80 hover:${tech.color} transition-colors`}>
+                  {tech.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

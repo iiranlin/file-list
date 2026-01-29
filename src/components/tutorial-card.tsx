@@ -39,32 +39,16 @@ interface TutorialCardProps {
   tutorial: Tutorial;
 }
 
-const getDifficultyColor = (difficulty: string) => {
+const getDifficultyVariant = (difficulty: string): "default" | "secondary" | "destructive" | "outline" => {
   switch (difficulty) {
     case "Beginner":
-    case "初级":
-      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+      return "secondary"; // Green-ish/Neutral
     case "Intermediate":
-    case "中级":
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
+      return "default"; // Primary/Important
     case "Advanced":
-    case "高级":
-      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400";
+      return "destructive"; // Red/Hard
     default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
-  }
-};
-
-const getDifficultyText = (difficulty: string) => {
-  switch (difficulty) {
-    case "Beginner":
-      return "初级";
-    case "Intermediate":
-      return "中级";
-    case "Advanced":
-      return "高级";
-    default:
-      return difficulty;
+      return "outline";
   }
 };
 
@@ -73,20 +57,20 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
 
   return (
     <>
-      <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer h-full">
+      <Card className="group h-full cursor-pointer border border-border/60 bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-sm">
         <CardHeader>
           <div className="flex items-start justify-between mb-2">
-            <Badge variant="outline" className="mb-2">
+            <Badge variant="outline" className="mb-2 font-normal">
               {tutorial.category}
             </Badge>
-            <Badge className={getDifficultyColor(tutorial.difficulty)}>
-              {getDifficultyText(tutorial.difficulty)}
+            <Badge variant={getDifficultyVariant(tutorial.difficulty)}>
+              {tutorial.difficulty}
             </Badge>
           </div>
           <CardTitle className="text-xl mb-2 group-hover:text-primary transition-colors">
             {tutorial.title}
           </CardTitle>
-          <CardDescription className="text-base leading-relaxed">
+          <CardDescription className="text-base leading-relaxed line-clamp-3">
             {tutorial.excerpt}
           </CardDescription>
         </CardHeader>
@@ -95,23 +79,23 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
-                <Clock className="h-4 w-4" />
+                <Clock className="h-3.5 w-3.5" />
                 <span>{tutorial.readTime}</span>
               </div>
               <div className="flex items-center space-x-1">
-                <User className="h-4 w-4" />
+                <User className="h-3.5 w-3.5" />
                 <span>{tutorial.author}</span>
               </div>
             </div>
             <div className="flex items-center space-x-1">
-              <Calendar className="h-4 w-4" />
+              <Calendar className="h-3.5 w-3.5" />
               <span>{new Date(tutorial.publishDate).toLocaleDateString()}</span>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-1 mb-4">
             {tutorial.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-xs">
+              <Badge key={tag} variant="secondary" className="text-xs font-normal">
                 {tag}
               </Badge>
             ))}
@@ -119,37 +103,35 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
 
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="w-full">
+              <Button className="w-full" variant="outline">
                 <BookOpen className="h-4 w-4 mr-2" />
-                阅读教程
+                Read Tutorial
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-hidden sm:rounded-xl">
               <DialogHeader>
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between pr-8">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center space-x-2 mb-3">
                       <Badge variant="outline">{tutorial.category}</Badge>
-                      <Badge
-                        className={getDifficultyColor(tutorial.difficulty)}
-                      >
-                        {getDifficultyText(tutorial.difficulty)}
+                      <Badge variant={getDifficultyVariant(tutorial.difficulty)}>
+                        {tutorial.difficulty}
                       </Badge>
                     </div>
-                    <DialogTitle className="text-2xl mb-2">
+                    <DialogTitle className="text-2xl mb-4 leading-tight">
                       {tutorial.title}
                     </DialogTitle>
                     <DialogDescription className="text-base">
-                      <div className="flex items-center space-x-4 text-muted-foreground">
-                        <div className="flex items-center space-x-1">
+                      <div className="flex items-center gap-4 text-muted-foreground text-sm">
+                        <div className="flex items-center gap-1.5">
                           <User className="h-4 w-4" />
                           <span>{tutorial.author}</span>
                         </div>
-                        <div className="flex items-center space-x-1">
+                        <div className="flex items-center gap-1.5">
                           <Clock className="h-4 w-4" />
                           <span>{tutorial.readTime}</span>
                         </div>
-                        <div className="flex items-center space-x-1">
+                        <div className="flex items-center gap-1.5">
                           <Calendar className="h-4 w-4" />
                           <span>
                             {new Date(
@@ -163,16 +145,16 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
                 </div>
               </DialogHeader>
 
-              <div className="overflow-y-auto max-h-[calc(90vh-200px)] pr-6">
+              <div className="overflow-y-auto max-h-[calc(90vh-200px)] pr-2">
                 {/* 使用 relative 定位确保 rough-annotation 标注跟随内容滚动 */}
                 <div className="relative">
                   <MdViewer value={tutorial.content} />
                 </div>
 
                 <div className="mt-8 pt-6 border-t">
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 items-center">
                     <span className="text-sm font-medium text-muted-foreground mr-2">
-                      标签:
+                      Tags:
                     </span>
                     {tutorial.tags.map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">

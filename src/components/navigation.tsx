@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Music, Video, Image, BookOpen, Menu } from "lucide-react"
+import { Home, Music, Video, Image, BookOpen, Menu, Fingerprint } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -53,17 +53,17 @@ export function Navigation() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-center">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <LoadingLink href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">P</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 flex justify-center">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-8">
+          <LoadingLink href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+            <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
+               <Fingerprint className="h-5 w-5" />
             </div>
-            <span className="font-bold text-xl">作品集</span>
+            <span className="font-semibold text-lg tracking-tight">Portfolio</span>
           </LoadingLink>
           
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden md:flex items-center gap-6">
             {navigation.map((item) => {
               const Icon = item.icon
               return (
@@ -71,7 +71,7 @@ export function Navigation() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary",
+                    "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
                     pathname === item.href
                       ? "text-primary"
                       : "text-muted-foreground"
@@ -85,13 +85,13 @@ export function Navigation() {
           </nav>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-4">
           {/* Mobile Navigation */}
           <div className="md:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-[1.2rem] w-[1.2rem]" />
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -103,13 +103,13 @@ export function Navigation() {
                       <LoadingLink
                         href={item.href}
                         className={cn(
-                          "flex items-center space-x-2 w-full",
+                          "flex items-center w-full cursor-pointer",
                           pathname === item.href
                             ? "text-primary"
                             : "text-muted-foreground"
                         )}
                       >
-                        <Icon className="h-4 w-4" />
+                        <Icon className="mr-2 h-4 w-4" />
                         <span>{item.name}</span>
                       </LoadingLink>
                     </DropdownMenuItem>

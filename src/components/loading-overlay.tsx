@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useLoading } from '@/lib/loading-context'
+import { Loader2 } from "lucide-react"
 
 export function LoadingOverlay() {
   const { isLoading } = useLoading()
@@ -9,27 +10,10 @@ export function LoadingOverlay() {
   if (!isLoading) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-      <div className="flex flex-col items-center space-y-4">
-        {/* 主要loading动画 */}
-        <div className="relative">
-          {/* 外圈旋转 */}
-          <div className="w-16 h-16 border-4 border-muted rounded-full animate-spin border-t-primary"></div>
-          {/* 内圈反向旋转 */}
-          <div className="absolute inset-2 w-12 h-12 border-4 border-muted rounded-full animate-spin-reverse border-b-primary"></div>
-          {/* 中心点 */}
-          <div className="absolute inset-6 w-4 h-4 bg-primary rounded-full animate-pulse"></div>
-        </div>
-
-        {/* 加载文字 */}
-        <div className="text-center space-y-2">
-          <p className="text-lg font-medium text-foreground">页面加载中</p>
-          <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-          </div>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm transition-all duration-300">
+      <div className="flex flex-col items-center gap-2">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground font-medium">Loading...</p>
       </div>
     </div>
   )
@@ -42,8 +26,8 @@ export function TopLoadingBar() {
   if (!isLoading) return null
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-muted">
-      <div className="h-full bg-gradient-to-r from-primary to-primary/60 animate-loading-bar origin-left"></div>
+    <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-transparent">
+      <div className="h-full bg-primary animate-loading-bar origin-left"></div>
     </div>
   )
 }
@@ -61,12 +45,12 @@ export function ButtonLoading({ children, isLoading: buttonLoading, ...props }: 
     <button
       {...props}
       disabled={loading || props.disabled}
-      className={`${props.className} ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
+      className={`${props.className} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
     >
       {loading ? (
-        <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-          <span>加载中...</span>
+        <div className="flex items-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>Processing...</span>
         </div>
       ) : (
         children
