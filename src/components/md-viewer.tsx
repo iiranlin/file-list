@@ -1,10 +1,11 @@
 "use client";
 
+import React from "react";
 import { Viewer } from "@bytemd/react";
 import gfm from "@bytemd/plugin-gfm";
 import gfmLocale from "@bytemd/plugin-gfm/locales/zh_Hans.json";
 import gemoji from "@bytemd/plugin-gemoji";
-import highlight from "@bytemd/plugin-highlight";
+import highlight from "@bytemd/plugin-highlight-ssr";
 import math from "@bytemd/plugin-math";
 import mathLocale from "@bytemd/plugin-math/locales/zh_Hans.json";
 import mermaid from "@bytemd/plugin-mermaid";
@@ -21,6 +22,7 @@ import "github-markdown-css/github-markdown-light.css";
 interface MdViewerProps {
   value?: string;
   className?: string;
+  onViewerReady?: (markdownBody: HTMLElement) => void;
 }
 
 // 创建 SSR 安全的 pluginCopyCode 插件
@@ -98,10 +100,27 @@ const plugins = [
   createSafePluginCopyCode(),
 ];
 
-export function MdViewer({ value = "", className = "" }: MdViewerProps) {
+export function MdViewer({ value = "", className = "", onViewerReady }: MdViewerProps) {
+  // 用 ref 存储最新的 onViewerReady，避免 useMemo 插件闭包锁死旧函数引用
+  const onViewerReadyRef = React.useRef(onViewerReady);
+  React.useEffect(() => {
+    onViewerReadyRef.current = onViewerReady;
+  }, [onViewerReady]);
+
+  const computedPlugins = React.useMemo(() => [
+    ...plugins,
+    // viewerEffect 调用时通过 ref 读取最新的 onViewerReady，确保 headings 数据是最新的
+    {
+      viewerEffect({ markdownBody }: { markdownBody: HTMLElement }) {
+        onViewerReadyRef.current?.(markdownBody);
+      },
+    },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ], []);
+
   return (
     <article className={`md-viewer markdown-body ${className}`}>
-      <Viewer value={value} plugins={plugins} />
+      <Viewer value={value} plugins={computedPlugins} />
     </article>
   );
 }
